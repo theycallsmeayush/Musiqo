@@ -6,185 +6,225 @@
 const TRACKS = [
   {
     id: 1,
-    title: 'Seedhe Maut',
-    artist: '11K',
+    artist: 'Seedhe Maut',
+    title: '11K',
     album: 'Voicenotes',
     cover: 'assets/11k.jpg',
     audio: 'assets/Music/11k.mp3',
+    duration: 171,
     colors: ['#8b0000', '#cc6600', '#6b1a1a']
   },
   {
     id: 2,
-    title: 'Shubh',
-    artist: 'Balenci',
+    artist: 'Shubh',
+    title: 'Balenci',
     album: 'Loud',
     cover: 'assets/Balenci.jpg',
     audio: 'assets/Music/Balenci.mp3',
+    duration: 146,
     colors: ['#7a0028', '#991a1a', '#8b2252']
   },
   {
     id: 3,
-    title: 'Arijit Singh',
-    artist: 'Tu Hi Hai Aashiqui',
+    artist: 'Arijit Singh',
+    title: 'Tu Hi Hai Aashiqui',
     album: 'Rolling Papers',
     cover: 'assets/Aashiqui.jpg',
     audio: 'assets/Music/Aashiqui.mp3',
+    duration: 298,
     colors: ['#8b7300', '#9e5a00', '#1a1a1a']
   },
   {
     id: 4,
-    title: 'Armaan Khan, Rashmi Virag',
-    artist: 'Mujhko Barsaat Bana Lo',
+    artist: 'Armaan Khan, Rashmi Virag',
+    title: 'Mujhko Barsaat Bana Lo',
     album: 'Island Vibes',
     cover: 'assets/Barsaat.jpg',
     audio: 'assets/Music/Barsaat.mp3',
+    duration: 264,
     colors: ['#1a5c32', '#8b5e00', '#7a1a1a']
   },
   {
     id: 5,
-    title: 'Shubh',
-    artist: 'Bounce',
+    artist: 'Shubh',
+    title: 'Bounce',
     album: 'Pink Friday',
     cover: 'assets/Bounce.jpg',
     audio: 'assets/Music/Bounce.mp3',
+    duration: 142,
     colors: ['#801a55', '#5c2d82', '#8b2252']
   },
   {
     id: 6,
-    title: 'Seedhe Maut',
-    artist: 'Champions',
+    artist: 'Seedhe Maut',
+    title: 'Champions',
     album: 'After Hours',
     cover: 'assets/smx.jpg',
     audio: 'assets/Music/Champions.mp3',
+    duration: 208,
     colors: ['#2d1a6b', '#4a3a8b', '#0a4a7a']
   },
   {
     id: 7,
-    title: 'Arijit Singh, Parampara Thakur',
-    artist: 'Pal Pal Dil Ke Pass',
+    artist: 'Arijit Singh, Parampara Thakur',
+    title: 'Pal Pal Dil Ke Pass',
     album: 'Fearless',
     cover: 'assets/Dil.jpg',
     audio: 'assets/Music/Dil.mp3',
+    duration: 252,
     colors: ['#8b7700', '#9e7a00', '#7a3a2a']
   },
   {
     id: 8,
-    title: 'Vishal Vaid',
-    artist: 'Fakira',
+    artist: 'Vishal Vaid',
+    title: 'Fakira',
     album: 'Nothing but the Beat',
     cover: 'assets/Fakira.jpg',
     audio: 'assets/Music/Fakira.mp3',
+    duration: 288,
     colors: ['#0a4a5c', '#1a3a5c', '#0d2a3a']
   },
   {
     id: 9,
-    title: 'Jyotica Tangri, Kumaar',
-    artist: 'Ishq De Fanniyar',
+    artist: 'Jyotica Tangri, Kumaar',
+    title: 'Ishq De Fanniyar',
     album: 'It Might as Well Be Swing',
     cover: 'assets/Fanniyar.jpg',
     audio: 'assets/Music/Fanniyar.mp3',
+    duration: 180,
     colors: ['#2a1a00', '#4a3520', '#1a1020']
   },
   {
     id: 10,
-    title: 'The PropheC',
-    artist: 'Kina Chir',
+    artist: 'The PropheC',
+    title: 'Kina Chir',
     album: 'Hotel California',
     cover: 'assets/Chir.jpg',
     audio: 'assets/Music/Chir.mp3',
+    duration: 134,
     colors: ['#6b3a1a', '#8b5a2a', '#3a1a0a']
   },
   {
     id: 11,
-    title: 'Javed Ali, Banjyotsna',
-    artist: 'Gale Lag Ja',
+    artist: 'Javed Ali, Banjyotsna',
+    title: 'Gale Lag Ja',
     album: 'Study Session',
     cover: 'assets/Gale.jpg',
     audio: 'assets/Music/Gale.mp3',
+    duration: 254,
     colors: ['#1a1a3a', '#2a1a4a', '#0a2a3a']
   },
   {
     id: 12,
-    title: 'Deep Dhaliwal, Anker Deol',
-    artist: 'Hypotonic',
+    artist: 'Deep Dhaliwal, Anker Deol',
+    title: 'Hypotonic',
     album: 'Starboy',
     cover: 'assets/Hypotonic.jpg',
     audio: 'assets/Music/Hypnotic.mp3',
+    duration: 148,
     colors: ['#1a0a3a', '#3a1a5a', '#0a1a2a']
   },
   {
     id: 13,
-    title: 'Pritam, Javed Bashir, Nikhil D\'Souza, Shefali Alvares, Irshad Kamil',
-    artist: 'Tera Naam Japdi Phiraan',
+    artist: 'Pritam, Javed Bashir, Nikhil D\'Souza, Shefali Alvares, Irshad Kamil',
+    title: 'Tera Naam Japdi Phiraan',
     album: 'Divide',
     cover: 'assets/Japdi.jpg',
     audio: 'assets/Music/Japdi.mp3',
+    duration: 222,
     colors: ['#5a3a1a', '#7a5a2a', '#2a1a0a']
   },
   {
     id: 14,
-    title: 'Seedhe Maut',
-    artist: 'Khatta Flow',
+    artist: 'Seedhe Maut',
+    title: 'Khatta Flow',
     album: 'Future Nostalgia',
     cover: 'assets/smx.jpg',
     audio: 'assets/Music/Khatta.mp3',
+    duration: 155,
     colors: ['#5a1a5a', '#3a0a4a', '#7a2a6a']
   },
   {
     id: 15,
-    title: 'Seedhe Maut',
-    artist: 'KODAK',
+    artist: 'Seedhe Maut',
+    title: 'KODAK',
     album: 'A Night at the Opera',
     cover: 'assets/Kodak.jpg',
     audio: 'assets/Music/Kodak.mp3',
+    duration: 366,
     colors: ['#3a1a0a', '#5a2a1a', '#1a0a0a']
   },
   {
     id: 16,
-    title: 'Anand Raj Anand',
-    artist: 'Uncha Lamba Kad',
+    artist: 'Anand Raj Anand',
+    title: 'Uncha Lamba Kad',
     album: 'Hollywood\'s Bleeding',
     cover: 'assets/Lamba.jpg',
     audio: 'assets/Music/Lamba.mp3',
+    duration: 282,
     colors: ['#2a1a3a', '#1a2a3a', '#3a2a4a']
   },
   {
     id: 17,
-    title: 'Navaan Sandhu',
-    artist: 'Moodshift',
+    artist: 'Navaan Sandhu',
+    title: 'Moodshift',
     album: 'Spider-Verse Soundtrack',
     cover: 'assets/Moodshift.jpg',
     audio: 'assets/Music/Moodshift.mp3',
+    duration: 198,
     colors: ['#5a4a00', '#7a5a10', '#3a2a00']
   },
   {
     id: 18,
-    title: 'Zher Vibe, Intense, Sardar Khehra',
-    artist: 'Sensation',
+    artist: 'Zher Vibe, Intense, Sardar Khehra',
+    title: 'Sensation',
     album: 'Hurry Up, We\'re Dreaming',
     cover: 'assets/Sensation.jpg',
     audio: 'assets/Music/Sensation.mp3',
+    duration: 169,
     colors: ['#1a0a4a', '#0a2a5a', '#2a1a3a']
   },
   {
     id: 19,
-    title: 'Arijit Singh, White Noise Collectives, Amitabh Bhattacharya',
-    artist: 'Sitaare',
+    artist: 'Arijit Singh, White Noise Collectives, Amitabh Bhattacharya',
+    title: 'Sitaare',
     album: 'Fine Line',
     cover: 'assets/Sitaare.jpg',
     audio: 'assets/Music/Sitaare.mp3',
+    duration: 244,
     colors: ['#5a2a1a', '#7a4a2a', '#3a1a0a']
   },
   {
     id: 20,
-    title: 'Zher Vibe, Intense',
-    artist: 'One Wish',
+    artist: 'Zher Vibe, Intense',
+    title: 'One Wish',
     album: 'Classical Masterpieces',
     cover: 'assets/Wish.jpg',
     audio: 'assets/Music/Wish.mp3',
+    duration: 137,
     colors: ['#0a0a1a', '#1a1a2a', '#0a0a0a']
   }
 ];
+
+// Pre-fetch exact audio metadata durations
+function fetchTrackDurations() {
+  TRACKS.forEach((track) => {
+    if (track.audio) {
+      const tempAudio = new Audio();
+      tempAudio.preload = 'metadata';
+      tempAudio.src = track.audio;
+      tempAudio.onloadedmetadata = () => {
+        if (tempAudio.duration && !isNaN(tempAudio.duration)) {
+          track.duration = Math.round(tempAudio.duration);
+          const itemEl = document.querySelector(`.library-item[data-id="${track.id}"] .library-item-duration`);
+          if (itemEl) {
+            itemEl.textContent = formatTime(track.duration);
+          }
+        }
+      };
+    }
+  });
+}
 
 // ─── Application State ───
 let currentTrackIndex = 0;
@@ -203,14 +243,14 @@ let visualizerAnimId = null;
 
 // ─── DOM References ───
 const audio = new Audio();
-audio.crossOrigin = 'anonymous';
-audio.preload = 'metadata';
+audio.preload = 'auto';
 
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => document.querySelectorAll(sel);
 
 // ─── Initialize ───
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+  await loadCustomTracksFromDB();
   buildCoverFlow();
   setupPlayerControls();
   setupProgressBar();
@@ -219,15 +259,52 @@ document.addEventListener('DOMContentLoaded', () => {
   setupKeyboard();
   buildLibrary();
   setupLibrary();
-  loadTrack(currentTrackIndex, false);
+
+  // Check URL play parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const autoPlayId = urlParams.get('play');
+  let autoPlayIndex = 0;
+
+  if (autoPlayId) {
+    const foundIdx = TRACKS.findIndex(t => t.id == autoPlayId || t.id === autoPlayId);
+    if (foundIdx !== -1) {
+      autoPlayIndex = foundIdx;
+    }
+  }
+
+  currentTrackIndex = autoPlayIndex;
+  targetTrackIndex = autoPlayIndex;
+  currentVisualIndex = autoPlayIndex;
+
+  loadTrack(currentTrackIndex, !!autoPlayId);
   updateAmbientBackground();
   startVisualizerFallback();
   startPhysicsEngine();
+  fetchTrackDurations();
 });
+
+// Load user uploaded songs from IndexedDB (appended to ending of existing list)
+async function loadCustomTracksFromDB() {
+  if (window.musiqoDB) {
+    try {
+      const customTracks = await window.musiqoDB.getAllTracks();
+      if (customTracks && customTracks.length > 0) {
+        const existingIds = new Set(TRACKS.map(t => String(t.id)));
+        const newTracks = customTracks.filter(t => !existingIds.has(String(t.id)));
+        // Append new uploaded songs to the ending of the existing Songs List
+        TRACKS.push(...newTracks);
+      }
+    } catch (e) {
+      console.warn('Could not load custom tracks from IndexedDB:', e);
+    }
+  }
+}
 
 // ─── Build Cover Flow Cards ───
 function buildCoverFlow() {
   const track = $('.coverflow-track');
+  if (!track) return;
+  track.innerHTML = '';
   TRACKS.forEach((t, i) => {
     const card = document.createElement('div');
     card.className = 'album-card';
@@ -237,8 +314,8 @@ function buildCoverFlow() {
         <img class="card-image" src="${t.cover}" alt="${t.album}" loading="lazy">
       </div>
       <div class="card-info">
-        <div class="card-artist">${t.artist}</div>
         <div class="card-title">${t.title}</div>
+        <div class="card-artist">${t.artist}</div>
       </div>
     `;
     card.addEventListener('click', () => {
@@ -251,8 +328,9 @@ function buildCoverFlow() {
   positionCards();
 }
 
-// ─── Build Song Library Sidebar (240+ FPS pre-cached) ───
+// ─── Build Song Library Sidebar ───
 const trackSearchIndex = [];
+let activePlaylistFilter = null; // null = all songs, or playlist object
 
 function buildLibrary() {
   const list = $('.library-list');
@@ -260,16 +338,42 @@ function buildLibrary() {
   list.innerHTML = '';
   trackSearchIndex.length = 0;
 
-  TRACKS.forEach((t, i) => {
+  let displayTracks = TRACKS;
+  if (activePlaylistFilter && activePlaylistFilter.trackIds) {
+    const filterSet = new Set(activePlaylistFilter.trackIds.map(String));
+    displayTracks = TRACKS.filter(t => filterSet.has(String(t.id)));
+  }
+
+  const countText = $('#libraryCountText') || $('.library-count');
+  if (countText) countText.textContent = `${displayTracks.length} ${displayTracks.length === 1 ? 'Song' : 'Songs'}`;
+
+  if (displayTracks.length === 0) {
+    list.innerHTML = `
+      <div class="empty-library-state">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="rgba(255,255,255,0.2)"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+        <p>No songs found in this playlist</p>
+      </div>
+    `;
+    return;
+  }
+
+  displayTracks.forEach((t) => {
+    const originalIndex = TRACKS.findIndex(trackItem => String(trackItem.id) === String(t.id));
     trackSearchIndex.push(`${t.title} ${t.artist} ${t.album}`.toLowerCase());
 
+    const durationText = t.duration ? formatTime(t.duration) : '3:15';
+
     const item = document.createElement('div');
-    item.className = 'library-item' + (i === currentTrackIndex ? ' active' : '');
-    item.dataset.index = i;
+    item.className = 'library-item' + (originalIndex === currentTrackIndex ? ' active' : '');
+    item.dataset.index = originalIndex;
+    item.dataset.id = t.id;
+
     item.innerHTML = `
       <img class="library-item-cover" src="${t.cover}" alt="${t.album}" loading="lazy">
       <div class="library-item-info">
-        <div class="library-item-title">${t.title}</div>
+        <div class="library-item-title-row">
+          <span class="library-item-title">${t.title}</span>
+        </div>
         <div class="library-item-artist">${t.artist}</div>
       </div>
       <div class="library-item-badge">
@@ -278,39 +382,69 @@ function buildLibrary() {
           <span class="wave-bar" style="--i: 1; height: 75%"></span>
           <span class="wave-bar" style="--i: 2; height: 100%"></span>
         </span>
-        <span class="library-item-duration">1:35</span>
+        <span class="library-item-duration">${durationText}</span>
       </div>
+      <button class="library-item-options-btn" title="Song Options" aria-label="Song Options">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+      </button>
     `;
-    item.addEventListener('click', () => {
-      navigateTo(i);
-      updateLibraryActive();
+
+    item.addEventListener('click', (e) => {
+      if (!e.target.closest('.library-item-options-btn')) {
+        navigateTo(originalIndex);
+        updateLibraryActive();
+      }
     });
+
+    // Options button click handler
+    const optionsBtn = item.querySelector('.library-item-options-btn');
+    if (optionsBtn) {
+      optionsBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openSongOptionsMenu(t, optionsBtn);
+      });
+    }
+
     list.appendChild(item);
   });
 }
 
 function updateLibraryActive() {
   const items = $$('.library-item');
-  items.forEach((item, i) => {
-    item.classList.toggle('active', i === currentTrackIndex);
+  items.forEach((item) => {
+    const isCurrent = parseInt(item.dataset.index) === currentTrackIndex;
+    item.classList.toggle('active', isCurrent);
   });
+  updateWaveAnimationState();
 }
 
 function setupLibrary() {
-  const toggleBtn = $('.library-toggle');
+  const toggleBtns = $$('.library-toggle');
   const panel = $('.library-panel');
   const backdrop = $('#libraryBackdrop');
 
   function closeLibrary() {
     if (panel) panel.classList.remove('open');
-    if (toggleBtn) toggleBtn.classList.remove('active-toggle');
+    toggleBtns.forEach(b => b.classList.remove('active-toggle'));
   }
 
-  if (toggleBtn && panel) {
-    toggleBtn.addEventListener('click', (e) => {
+  toggleBtns.forEach(btn => {
+    btn.addEventListener('click', (e) => {
       e.stopPropagation();
-      panel.classList.toggle('open');
-      toggleBtn.classList.toggle('active-toggle');
+      if (panel) panel.classList.toggle('open');
+      btn.classList.toggle('active-toggle');
+    });
+  });
+
+  const dockFavoritesBtn = $('#dockFavoritesBtn');
+  if (dockFavoritesBtn) {
+    dockFavoritesBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      if (panel && !panel.classList.contains('open')) {
+        panel.classList.add('open');
+      }
+      const tabPlaylistsBtn = $('#tabPlaylistsBtn');
+      if (tabPlaylistsBtn) tabPlaylistsBtn.click();
     });
   }
 
@@ -355,8 +489,8 @@ function startPhysicsEngine() {
     const dt = Math.min((now - lastPhysicsTime) / 1000, 0.05);
     lastPhysicsTime = now;
 
-    // Frame-rate independent exponential lerp for 1s smooth transition
-    const lerpRate = 1 - Math.exp(-6.0 * dt);
+    // Frame-rate independent exponential lerp for ultra-smooth 1.2s transition
+    const lerpRate = 1 - Math.exp(-4.5 * dt);
     currentVisualIndex += (targetTrackIndex - currentVisualIndex) * lerpRate;
 
     const N = TRACKS.length;
@@ -459,6 +593,14 @@ function prevTrack() {
 // ─── Load Track ───
 function loadTrack(index, autoplay) {
   const track = TRACKS[index];
+  if (!track) return;
+
+  // Reset simulated timer if active
+  if (simulationInterval) {
+    cancelAnimationFrame(simulationInterval);
+    simulationInterval = null;
+  }
+  simulatedTime = 0;
 
   // Update now playing info
   const npThumb = $('.now-playing-thumb');
@@ -466,17 +608,27 @@ function loadTrack(index, autoplay) {
   const npArtist = $('.np-artist');
 
   if (npThumb) npThumb.src = track.cover;
-  if (npTitle) npTitle.textContent = track.artist;
-  if (npArtist) npArtist.textContent = track.title;
+  if (npTitle) npTitle.textContent = track.title;
+  if (npArtist) npArtist.textContent = track.artist;
 
   // Audio file support
   if (track.audio) {
-    audio.src = track.audio;
-    audio.currentTime = 0;
+    const isDifferentTrack = !audio.src || (!audio.src.endsWith(encodeURI(track.audio)) && !audio.src.endsWith(track.audio) && audio.src !== track.audio);
+    if (isDifferentTrack) {
+      audio.src = track.audio;
+      audio.currentTime = 0;
+    }
+
     if (autoplay) {
       isPlaying = true;
       updatePlayButton();
-      audio.play().catch(() => {});
+      audio.play().catch((err) => {
+        console.warn('Audio play failed, switching to simulated playback:', err);
+        simulatePlayback();
+      });
+    } else if (!isPlaying) {
+      audio.pause();
+      updateProgressUI(0, audio.duration || SIMULATED_DURATION);
     }
   } else {
     audio.pause();
@@ -487,6 +639,7 @@ function loadTrack(index, autoplay) {
       simulatePlayback();
     }
   }
+  updateWaveAnimationState();
 }
 
 // ─── Simulated Playback (rAF-based for 120fps) ───
@@ -531,7 +684,9 @@ function simulatePlayback() {
 function pausePlayback() {
   isPlaying = false;
   updatePlayButton();
-  audio.pause();
+  try {
+    audio.pause();
+  } catch (e) {}
   if (simulationInterval) {
     cancelAnimationFrame(simulationInterval);
     simulationInterval = null;
@@ -540,18 +695,20 @@ function pausePlayback() {
 
 function togglePlay() {
   const track = TRACKS[currentTrackIndex];
+  if (!track) return;
+
   if (isPlaying) {
     pausePlayback();
   } else {
-    if (track && track.audio) {
-      if (!audio.src || !audio.src.includes(encodeURI(track.audio))) {
+    if (track.audio) {
+      const isDifferentTrack = !audio.src || (!audio.src.endsWith(encodeURI(track.audio)) && !audio.src.endsWith(track.audio) && audio.src !== track.audio);
+      if (isDifferentTrack) {
         audio.src = track.audio;
       }
-      audio.play().then(() => {
-        isPlaying = true;
-        updatePlayButton();
-      }).catch(err => {
-        console.log('Audio play error, falling back:', err);
+      isPlaying = true;
+      updatePlayButton();
+      audio.play().catch(err => {
+        console.warn('Audio play error, falling back to simulated playback:', err);
         simulatePlayback();
       });
     } else {
@@ -639,6 +796,25 @@ function setupPlayerControls() {
   });
 
   // Real HTML5 Audio Event Listeners
+  audio.addEventListener('play', () => {
+    isPlaying = true;
+    updatePlayButton();
+  });
+
+  audio.addEventListener('pause', () => {
+    if (!simulationInterval) {
+      isPlaying = false;
+      updatePlayButton();
+    }
+  });
+
+  audio.addEventListener('error', (e) => {
+    console.warn('Audio play error event caught, activating simulation fallback:', e);
+    if (isPlaying) {
+      simulatePlayback();
+    }
+  });
+
   audio.addEventListener('timeupdate', () => {
     if (audio.duration && !isNaN(audio.duration)) {
       updateProgressUI(audio.currentTime, audio.duration);
@@ -663,36 +839,90 @@ function setupPlayerControls() {
 
 function updatePlayButton() {
   const btnPlay = $('.btn-play');
-  if (!btnPlay) return;
-  const svg = btnPlay.querySelector('svg');
-  if (isPlaying) {
-    svg.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
-  } else {
-    svg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+  if (btnPlay) {
+    const svg = btnPlay.querySelector('svg');
+    if (isPlaying) {
+      svg.innerHTML = '<rect x="6" y="4" width="4" height="16" rx="1"/><rect x="14" y="4" width="4" height="16" rx="1"/>';
+    } else {
+      svg.innerHTML = '<path d="M8 5v14l11-7z"/>';
+    }
+  }
+  updateWaveAnimationState();
+}
+
+function updateWaveAnimationState() {
+  const miniWave = $('#miniWave');
+  if (miniWave) {
+    if (isPlaying) {
+      miniWave.classList.add('playing');
+    } else {
+      miniWave.classList.remove('playing');
+    }
+  }
+
+  // Update library list active item wave
+  const allWaves = $$('.library-item-wave');
+  allWaves.forEach(w => w.classList.remove('playing'));
+
+  const activeItem = $('.library-item.active');
+  if (activeItem && isPlaying) {
+    const activeWave = activeItem.querySelector('.library-item-wave');
+    if (activeWave) {
+      activeWave.classList.add('playing');
+    }
   }
 }
 
-// ─── Volume ───
+// ─── Volume Control (Positioned Left of Slider & Click to Mute/Unmute) ───
 function setupVolumeControl() {
   const slider = $('.volume-slider');
+  const volBtn = $('.btn-volume');
   if (!slider) return;
-  slider.value = 80;
-  slider.addEventListener('input', (e) => {
-    const vol = e.target.value / 100;
+
+  let lastVolume = 80;
+
+  function updateVolumeState(vol) {
     audio.volume = vol;
-    // Update icon
-    const volBtn = $('.btn-volume');
+    const pct = Math.round(vol * 100);
+    slider.value = pct;
+    slider.style.background = `linear-gradient(to right, #ffffff ${pct}%, rgba(255, 255, 255, 0.18) ${pct}%)`;
+
     if (volBtn) {
       const svg = volBtn.querySelector('svg');
-      if (vol === 0) {
-        svg.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
-      } else if (vol < 0.5) {
-        svg.innerHTML = '<path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/>';
-      } else {
-        svg.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+      if (svg) {
+        if (vol === 0) {
+          svg.innerHTML = '<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>';
+        } else if (vol < 0.5) {
+          svg.innerHTML = '<path d="M18.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM5 9v6h4l5 5V4L9 9H5z"/>';
+        } else {
+          svg.innerHTML = '<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>';
+        }
       }
     }
+  }
+
+  // Initialize at 80% volume with active fill
+  updateVolumeState(0.8);
+
+  // Slider Input Listener
+  slider.addEventListener('input', (e) => {
+    const vol = e.target.value / 100;
+    if (vol > 0) lastVolume = e.target.value;
+    updateVolumeState(vol);
   });
+
+  // Volume Button Click Listener (Mute / Unmute Toggle)
+  if (volBtn) {
+    volBtn.addEventListener('click', () => {
+      if (audio.volume > 0) {
+        lastVolume = slider.value > 0 ? slider.value : 80;
+        updateVolumeState(0);
+      } else {
+        const restoreVal = (lastVolume && lastVolume > 0) ? lastVolume / 100 : 0.8;
+        updateVolumeState(restoreVal);
+      }
+    });
+  }
 }
 
 // ─── Ambient Background ───
@@ -804,62 +1034,618 @@ function startVisualizerFallback() {
   animateBars();
 }
 
-// ─── Canvas Visualizer (Smooth lerp) ───
-let canvasBarTargets = [];
-let canvasBarCurrents = [];
-
+// ─── Canvas Visualizer (Top-Down Smooth Liquid Ocean Waves on 4 Screen Borders) ───
 function drawCanvasVisualizer() {
   const canvas = $('.audio-visualizer-canvas');
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
-  canvas.width = canvas.offsetWidth * 2;
-  canvas.height = canvas.offsetHeight * 2;
-  ctx.scale(2, 2);
 
-  const w = canvas.offsetWidth;
-  const h = canvas.offsetHeight;
-  const barCount = 64;
-  const barWidth = w / barCount - 2;
-  let track = TRACKS[currentTrackIndex];
+  function resizeCanvas() {
+    canvas.width = window.innerWidth * (window.devicePixelRatio || 1);
+    canvas.height = window.innerHeight * (window.devicePixelRatio || 1);
+  }
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
 
-  canvasBarTargets = new Array(barCount).fill(2);
-  canvasBarCurrents = new Array(barCount).fill(2);
-  let targetCounter = 0;
+  let wavePhase = 0;
+  let currentAmplitude = 0;
+  let targetAmplitude = 0;
 
   function draw() {
-    track = TRACKS[currentTrackIndex];
+    const w = canvas.width;
+    const h = canvas.height;
+    const dpr = window.devicePixelRatio || 1;
+
     ctx.clearRect(0, 0, w, h);
 
-    targetCounter++;
-    // Update targets every ~8 frames for organic movement
-    if (targetCounter % 8 === 0) {
-      for (let i = 0; i < barCount; i++) {
-        canvasBarTargets[i] = isPlaying
-          ? Math.random() * h * 0.8 + 2
-          : 2;
-      }
-    }
+    // Sync visibility: canvas wave overlay turns active when playing
+    canvas.classList.toggle('active', isPlaying);
 
-    const lerpFactor = 0.14;
-    for (let i = 0; i < barCount; i++) {
-      canvasBarCurrents[i] += (canvasBarTargets[i] - canvasBarCurrents[i]) * lerpFactor;
-      const barHeight = canvasBarCurrents[i];
+    const track = TRACKS[currentTrackIndex] || TRACKS[0];
+    const colorPrimary = (track.colors && track.colors[0]) || '#ff6b6b';
+    const colorSecondary = (track.colors && track.colors[1]) || '#ff8e8e';
 
-      const gradient = ctx.createLinearGradient(0, h, 0, h - barHeight);
-      gradient.addColorStop(0, track.colors[0] + '60');
-      gradient.addColorStop(1, track.colors[1] + '30');
-      ctx.fillStyle = gradient;
+    // Target ocean swell amplitude expands gently when playing, recedes when paused
+    targetAmplitude = isPlaying ? 40 * dpr : 0;
+    currentAmplitude += (targetAmplitude - currentAmplitude) * 0.05;
 
-      const x = i * (barWidth + 2);
-      ctx.fillRect(x, h - barHeight, barWidth, barHeight);
+    // Slow, organic ocean wave motion speed
+    wavePhase += isPlaying ? 0.009 : 0.002;
+
+    if (currentAmplitude > 0.5) {
+      // Draw smooth fluid ocean swell wave along a screen border
+      const drawOceanBorderWave = (side) => {
+        const layers = [
+          { color: colorPrimary, opacity: 0.28, freq: 0.005 / dpr, speedMult: 0.9, baseAmp: currentAmplitude * 1.1 },
+          { color: colorSecondary, opacity: 0.35, freq: 0.009 / dpr, speedMult: 1.25, baseAmp: currentAmplitude * 0.85 },
+          { color: '#ffffff', opacity: 0.45, freq: 0.013 / dpr, speedMult: 1.6, baseAmp: currentAmplitude * 0.5 }
+        ];
+
+        const isHorizontal = side === 'top' || side === 'bottom';
+        const length = isHorizontal ? w : h;
+        const step = 8 * dpr;
+
+        layers.forEach((layer) => {
+          ctx.beginPath();
+
+          if (side === 'top') ctx.moveTo(0, 0);
+          else if (side === 'bottom') ctx.moveTo(0, h);
+          else if (side === 'left') ctx.moveTo(0, 0);
+          else if (side === 'right') ctx.moveTo(w, 0);
+
+          for (let pos = 0; pos <= length; pos += step) {
+            const waveVal = Math.sin(pos * layer.freq + wavePhase * layer.speedMult) * (layer.baseAmp * 0.5)
+                          + Math.cos(pos * layer.freq * 1.6 - wavePhase * layer.speedMult * 0.7) * (layer.baseAmp * 0.35);
+
+            if (side === 'top') {
+              const y = layer.baseAmp * 0.4 + waveVal;
+              ctx.lineTo(pos, y);
+            } else if (side === 'bottom') {
+              const y = h - (layer.baseAmp * 0.4 + waveVal);
+              ctx.lineTo(pos, y);
+            } else if (side === 'left') {
+              const x = layer.baseAmp * 0.4 + waveVal;
+              ctx.lineTo(x, pos);
+            } else if (side === 'right') {
+              const x = w - (layer.baseAmp * 0.4 + waveVal);
+              ctx.lineTo(x, pos);
+            }
+          }
+
+          if (side === 'top') {
+            ctx.lineTo(w, 0);
+            ctx.closePath();
+          } else if (side === 'bottom') {
+            ctx.lineTo(w, h);
+            ctx.closePath();
+          } else if (side === 'left') {
+            ctx.lineTo(0, h);
+            ctx.closePath();
+          } else if (side === 'right') {
+            ctx.lineTo(w, h);
+            ctx.closePath();
+          }
+
+          ctx.fillStyle = layer.color;
+          ctx.globalAlpha = layer.opacity;
+          ctx.fill();
+          ctx.globalAlpha = 1.0;
+        });
+      };
+
+      // Render 4-border top-down liquid ocean waves
+      drawOceanBorderWave('top');
+      drawOceanBorderWave('bottom');
+      drawOceanBorderWave('left');
+      drawOceanBorderWave('right');
     }
 
     requestAnimationFrame(draw);
   }
-  draw();
+
+  requestAnimationFrame(draw);
 }
 
 // Start canvas visualizer after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(drawCanvasVisualizer, 500);
+  setupPlaylistSystem();
+  setupSongOptionsMenu();
 });
+
+/* ================================================
+   PLAYLISTS & SONG OPTIONS SYSTEM
+   ================================================ */
+
+let activeMenuTrack = null;
+let selectedTrackForPlaylist = null;
+
+// ─── Setup Playlists System ───
+function setupPlaylistSystem() {
+  const tabSongsBtn = $('#tabSongsBtn');
+  const tabPlaylistsBtn = $('#tabPlaylistsBtn');
+  const songsView = $('#songsView');
+  const playlistsView = $('#playlistsView');
+
+  if (tabSongsBtn && tabPlaylistsBtn) {
+    tabSongsBtn.addEventListener('click', () => {
+      tabSongsBtn.classList.add('active');
+      tabPlaylistsBtn.classList.remove('active');
+      if (songsView) songsView.classList.remove('hidden');
+      if (playlistsView) playlistsView.classList.add('hidden');
+    });
+
+    tabPlaylistsBtn.addEventListener('click', async () => {
+      tabPlaylistsBtn.classList.add('active');
+      tabSongsBtn.classList.remove('active');
+      if (playlistsView) playlistsView.classList.remove('hidden');
+      if (songsView) songsView.classList.add('hidden');
+      await buildPlaylistsView();
+    });
+  }
+
+  // Active playlist filter banner
+  const clearPlaylistFilterBtn = $('#clearPlaylistFilterBtn');
+  if (clearPlaylistFilterBtn) {
+    clearPlaylistFilterBtn.addEventListener('click', () => {
+      activePlaylistFilter = null;
+      const banner = $('#activePlaylistBanner');
+      if (banner) banner.classList.add('hidden');
+      buildLibrary();
+    });
+  }
+
+  // Create Playlist Modal setup
+  const openCreatePlaylistBtn = $('#openCreatePlaylistBtn');
+  const createPlaylistModal = $('#createPlaylistModal');
+  const closeCreatePlaylistModal = $('#closeCreatePlaylistModal');
+  const cancelCreatePlaylistBtn = $('#cancelCreatePlaylistBtn');
+  const submitCreatePlaylistBtn = $('#submitCreatePlaylistBtn');
+
+  if (openCreatePlaylistBtn && createPlaylistModal) {
+    openCreatePlaylistBtn.addEventListener('click', () => {
+      createPlaylistModal.classList.remove('hidden');
+    });
+  }
+
+  if (closeCreatePlaylistModal) {
+    closeCreatePlaylistModal.addEventListener('click', () => {
+      if (createPlaylistModal) createPlaylistModal.classList.add('hidden');
+    });
+  }
+
+  if (cancelCreatePlaylistBtn) {
+    cancelCreatePlaylistBtn.addEventListener('click', () => {
+      if (createPlaylistModal) createPlaylistModal.classList.add('hidden');
+    });
+  }
+
+  if (submitCreatePlaylistBtn) {
+    submitCreatePlaylistBtn.addEventListener('click', async () => {
+      const nameInput = $('#newPlaylistName');
+      const descInput = $('#newPlaylistDesc');
+      const name = nameInput ? nameInput.value.trim() : '';
+      const desc = descInput ? descInput.value.trim() : '';
+
+      if (!name) {
+        showToast('Please enter a Playlist name', 'error');
+        return;
+      }
+
+      await window.musiqoDB.savePlaylist({
+        name: name,
+        description: desc,
+        trackIds: selectedTrackForPlaylist ? [selectedTrackForPlaylist.id] : []
+      });
+
+      if (nameInput) nameInput.value = '';
+      if (descInput) descInput.value = '';
+      if (createPlaylistModal) createPlaylistModal.classList.add('hidden');
+
+      showToast(`✨ Created playlist "${name}"!`, 'success');
+      await buildPlaylistsView();
+
+      if (selectedTrackForPlaylist) {
+        selectedTrackForPlaylist = null;
+        const addToPlaylistModal = $('#addToPlaylistModal');
+        if (addToPlaylistModal) addToPlaylistModal.classList.add('hidden');
+      }
+    });
+  }
+
+  // Add To Playlist Modal close button
+  const closeAddToPlaylistModal = $('#closeAddToPlaylistModal');
+  if (closeAddToPlaylistModal) {
+    closeAddToPlaylistModal.addEventListener('click', () => {
+      const modal = $('#addToPlaylistModal');
+      if (modal) modal.classList.add('hidden');
+    });
+  }
+
+  const modalCreateNewPlaylistBtn = $('#modalCreateNewPlaylistBtn');
+  if (modalCreateNewPlaylistBtn) {
+    modalCreateNewPlaylistBtn.addEventListener('click', () => {
+      const modal = $('#addToPlaylistModal');
+      if (modal) modal.classList.add('hidden');
+      if (createPlaylistModal) createPlaylistModal.classList.remove('hidden');
+    });
+  }
+}
+
+// ─── Render Playlists View ───
+async function buildPlaylistsView() {
+  const container = $('#playlistsList');
+  if (!container) return;
+  container.innerHTML = '';
+
+  const playlists = await window.musiqoDB.getAllPlaylists();
+
+  if (!playlists || playlists.length === 0) {
+    container.innerHTML = `
+      <div class="empty-library-state">
+        <svg viewBox="0 0 24 24" width="36" height="36" fill="rgba(255,255,255,0.2)"><path d="M4 10h12v2H4zm0-4h12v2H4zm0 8h8v2H4zm10 0v6l5-3z"/></svg>
+        <p>No playlists created yet</p>
+      </div>
+    `;
+    return;
+  }
+
+  playlists.forEach(pl => {
+    const card = document.createElement('div');
+    card.className = 'playlist-card';
+    card.innerHTML = `
+      <div class="playlist-card-icon">🎵</div>
+      <div class="playlist-card-info">
+        <div class="playlist-card-title">${escapeHtml(pl.name)}</div>
+        <div class="playlist-card-meta">${pl.trackIds ? pl.trackIds.length : 0} Tracks ${pl.description ? '• ' + escapeHtml(pl.description) : ''}</div>
+      </div>
+      <div class="playlist-card-actions">
+        <button class="playlist-btn play-pl-btn" title="View Playlist Songs">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          View
+        </button>
+        <button class="playlist-btn del-pl-btn" title="Delete Playlist">
+          <svg viewBox="0 0 24 24" width="14" height="14" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+        </button>
+      </div>
+    `;
+
+    // Click to view playlist songs
+    card.querySelector('.play-pl-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      activePlaylistFilter = pl;
+      
+      const banner = $('#activePlaylistBanner');
+      const bannerTitle = $('#bannerPlaylistTitle');
+      if (bannerTitle) bannerTitle.textContent = pl.name;
+      if (banner) banner.classList.remove('hidden');
+
+      // Switch to Songs tab
+      const tabSongsBtn = $('#tabSongsBtn');
+      if (tabSongsBtn) tabSongsBtn.click();
+    });
+
+    // Delete playlist
+    card.querySelector('.del-pl-btn').addEventListener('click', async (e) => {
+      e.stopPropagation();
+      const confirmed = await showConfirmDialog({
+        title: 'Delete Playlist',
+        message: `Are you sure you want to delete playlist "${pl.name}"?`,
+        confirmText: 'Delete Playlist',
+        icon: '🗑️',
+        isDanger: true
+      });
+
+      if (confirmed) {
+        await window.musiqoDB.deletePlaylist(pl.id);
+        showToast(`Deleted playlist "${pl.name}"`, 'info');
+        if (activePlaylistFilter && activePlaylistFilter.id === pl.id) {
+          activePlaylistFilter = null;
+          const banner = $('#activePlaylistBanner');
+          if (banner) banner.classList.add('hidden');
+        }
+        await buildPlaylistsView();
+      }
+    });
+
+    container.appendChild(card);
+  });
+}
+
+// ─── Setup Song Options Menu ───
+function setupSongOptionsMenu() {
+  const menu = $('#songOptionsMenu');
+  const menuDelete = $('#menuOptionDelete');
+  const menuAddToPlaylist = $('#menuOptionAddToPlaylist');
+  const menuDownload = $('#menuOptionDownload');
+
+  // Close menu on click outside
+  document.addEventListener('click', (e) => {
+    if (menu && !menu.classList.contains('hidden') && !menu.contains(e.target) && !e.target.closest('.library-item-options-btn')) {
+      menu.classList.add('hidden');
+    }
+  });
+
+  // Action 1: Delete Song
+  if (menuDelete) {
+    menuDelete.addEventListener('click', () => {
+      if (menu) menu.classList.add('hidden');
+      if (activeMenuTrack) {
+        deleteTrackHandler(activeMenuTrack);
+      }
+    });
+  }
+
+  // Action 2: Add to Playlist
+  if (menuAddToPlaylist) {
+    menuAddToPlaylist.addEventListener('click', () => {
+      if (menu) menu.classList.add('hidden');
+      if (activeMenuTrack) {
+        openAddToPlaylistModal(activeMenuTrack);
+      }
+    });
+  }
+
+  // Action 3: Download Song (With Cover & Details)
+  if (menuDownload) {
+    menuDownload.addEventListener('click', () => {
+      if (menu) menu.classList.add('hidden');
+      if (activeMenuTrack) {
+        downloadSongHandler(activeMenuTrack);
+      }
+    });
+  }
+}
+
+// ─── Open Contextual Options Menu ───
+function openSongOptionsMenu(track, triggerBtn) {
+  activeMenuTrack = track;
+  const menu = $('#songOptionsMenu');
+  const menuTitle = $('#menuSongTitle');
+  const menuArtist = $('#menuSongArtist');
+
+  if (!menu) return;
+
+  if (menuTitle) menuTitle.textContent = track.title;
+  if (menuArtist) menuArtist.textContent = track.artist;
+
+  const rect = triggerBtn.getBoundingClientRect();
+  menu.style.top = `${rect.bottom + window.scrollY + 4}px`;
+  menu.style.left = `${Math.min(window.innerWidth - 240, rect.left - 180)}px`;
+
+  menu.classList.remove('hidden');
+}
+
+// ─── Action 1: Delete Song Handler ───
+async function deleteTrackHandler(track) {
+  const confirmed = await showConfirmDialog({
+    title: 'Delete Song',
+    message: `Are you sure you want to delete "${track.title}" from Musiqo?`,
+    confirmText: 'Delete Song',
+    icon: '🎵',
+    isDanger: true
+  });
+
+  if (!confirmed) return;
+
+  try {
+    // Delete from IndexedDB / LocalStorage
+    await window.musiqoDB.deleteTrack(track.id);
+
+    // Remove from in-memory TRACKS array
+    const idx = TRACKS.findIndex(t => String(t.id) === String(track.id));
+    if (idx !== -1) {
+      TRACKS.splice(idx, 1);
+    }
+
+    // If currently playing deleted track, switch track
+    if (idx === currentTrackIndex) {
+      if (TRACKS.length > 0) {
+        currentTrackIndex = currentTrackIndex % TRACKS.length;
+        loadTrack(currentTrackIndex, isPlaying);
+      }
+    } else if (idx < currentTrackIndex) {
+      currentTrackIndex = Math.max(0, currentTrackIndex - 1);
+    }
+
+    // Rebuild UI
+    buildCoverFlow();
+    buildLibrary();
+
+    showToast(`🗑️ Deleted "${track.title}"`, 'info');
+  } catch (err) {
+    console.error('Delete song error:', err);
+    showToast('Failed to delete song: ' + err.message, 'error');
+  }
+}
+
+// ─── Action 2: Add to Playlist Handler ───
+async function openAddToPlaylistModal(track) {
+  selectedTrackForPlaylist = track;
+  const modal = $('#addToPlaylistModal');
+  const titleSpan = $('#addToPlaylistSongTitle');
+  const listContainer = $('#modalPlaylistsList');
+
+  if (titleSpan) titleSpan.textContent = `"${track.title}"`;
+  if (!listContainer || !modal) return;
+
+  listContainer.innerHTML = '';
+  const playlists = await window.musiqoDB.getAllPlaylists();
+
+  if (!playlists || playlists.length === 0) {
+    listContainer.innerHTML = `<p class="modal-subtitle">No playlists found. Create one below!</p>`;
+  } else {
+    playlists.forEach(pl => {
+      const item = document.createElement('div');
+      item.className = 'modal-playlist-item';
+      const isAlreadyIn = pl.trackIds && pl.trackIds.map(String).includes(String(track.id));
+
+      item.innerHTML = `
+        <div class="item-left">
+          <span class="pl-icon">🎵</span>
+          <span class="pl-name">${escapeHtml(pl.name)}</span>
+        </div>
+        <span class="pl-status">${isAlreadyIn ? '✓ Added' : '+ Add'}</span>
+      `;
+
+      item.addEventListener('click', async () => {
+        const added = await window.musiqoDB.addTrackToPlaylist(pl.id, track.id);
+        if (added) {
+          showToast(`🎵 Added "${track.title}" to ${pl.name}!`, 'success');
+        } else {
+          showToast(`"${track.title}" is already in ${pl.name}`, 'info');
+        }
+        modal.classList.add('hidden');
+      });
+
+      listContainer.appendChild(item);
+    });
+  }
+
+  modal.classList.remove('hidden');
+}
+
+// ─── Action 3: Download Song (With Cover image and Details) ───
+function downloadSongHandler(track) {
+  showToast(`📥 Downloading "${track.title}" audio, cover image & details...`, 'info');
+
+  const sanitize = (name) => name.replace(/[/\\?%*:|"<>]/g, '_');
+
+  // 1. Download Audio File
+  if (track.audio) {
+    const audioLink = document.createElement('a');
+    audioLink.href = track.audio;
+    audioLink.download = `${sanitize(track.artist)} - ${sanitize(track.title)}.mp3`;
+    document.body.appendChild(audioLink);
+    audioLink.click();
+    document.body.removeChild(audioLink);
+  }
+
+  // 2. Download Cover Image
+  if (track.cover) {
+    setTimeout(() => {
+      const coverLink = document.createElement('a');
+      coverLink.href = track.cover;
+      coverLink.download = `${sanitize(track.title)}_Cover.jpg`;
+      document.body.appendChild(coverLink);
+      coverLink.click();
+      document.body.removeChild(coverLink);
+    }, 400);
+  }
+
+  // 3. Download Details Metadata JSON
+  setTimeout(() => {
+    const details = {
+      title: track.title,
+      artist: track.artist,
+      album: track.album || 'Single',
+      duration: track.duration ? formatTime(track.duration) : '3:15',
+      ambientColors: track.colors || ['#ff416c', '#ff4b2b', '#1a0a2a'],
+      isUserCustomUpload: !!track.isCustom,
+      exportedFrom: 'Musiqo Player',
+      exportDate: new Date().toISOString()
+    };
+
+    const jsonBlob = new Blob([JSON.stringify(details, null, 2)], { type: 'application/json' });
+    const jsonUrl = URL.createObjectURL(jsonBlob);
+
+    const jsonLink = document.createElement('a');
+    jsonLink.href = jsonUrl;
+    jsonLink.download = `${sanitize(track.title)}_Details.json`;
+    document.body.appendChild(jsonLink);
+    jsonLink.click();
+    document.body.removeChild(jsonLink);
+
+    setTimeout(() => URL.revokeObjectURL(jsonUrl), 2000);
+  }, 800);
+}
+
+// Helper escape function
+function escapeHtml(str) {
+  if (!str) return '';
+  return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+}
+
+// ─── Toast System ───
+function showToast(message, type = 'info') {
+  let container = document.getElementById('toastContainer');
+  if (!container) {
+    container = document.createElement('div');
+    container.id = 'toastContainer';
+    container.className = 'toast-container';
+    document.body.appendChild(container);
+  }
+
+  const toast = document.createElement('div');
+  toast.className = `toast toast-${type}`;
+
+  let iconSvg = '';
+  if (type === 'success') iconSvg = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#4cd964"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>';
+  else if (type === 'error') iconSvg = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#ff3b30"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z"/></svg>';
+  else iconSvg = '<svg viewBox="0 0 24 24" width="18" height="18" fill="#007aff"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>';
+
+  toast.innerHTML = `
+    <div class="toast-icon">${iconSvg}</div>
+    <div class="toast-message">${escapeHtml(message)}</div>
+  `;
+
+  container.appendChild(toast);
+
+  setTimeout(() => toast.classList.add('toast-show'), 10);
+  setTimeout(() => {
+    toast.classList.remove('toast-show');
+    setTimeout(() => toast.remove(), 300);
+  }, 4000);
+}
+
+// ─── Custom Confirm Dialog System ───
+function showConfirmDialog({ title = 'Confirm Action', message = 'Are you sure?', confirmText = 'Delete', icon = '🗑️', isDanger = true }) {
+  return new Promise((resolve) => {
+    const modal = document.getElementById('customConfirmModal');
+    const titleEl = document.getElementById('confirmModalTitle');
+    const msgEl = document.getElementById('confirmModalMessage');
+    const iconEl = document.getElementById('confirmModalIcon');
+    const okBtn = document.getElementById('confirmModalOkBtn');
+    const cancelBtn = document.getElementById('confirmModalCancelBtn');
+
+    if (!modal || !okBtn || !cancelBtn) {
+      resolve(confirm(`${title}\n${message}`));
+      return;
+    }
+
+    if (titleEl) titleEl.textContent = title;
+    if (msgEl) msgEl.textContent = message;
+    if (iconEl) iconEl.textContent = icon;
+
+    if (okBtn) {
+      okBtn.textContent = confirmText;
+      if (isDanger) {
+        okBtn.className = 'modal-action-btn danger-action';
+      } else {
+        okBtn.className = 'modal-action-btn primary-action';
+      }
+    }
+
+    const cleanup = () => {
+      modal.classList.add('hidden');
+      okBtn.removeEventListener('click', onOk);
+      cancelBtn.removeEventListener('click', onCancel);
+    };
+
+    const onOk = () => {
+      cleanup();
+      resolve(true);
+    };
+
+    const onCancel = () => {
+      cleanup();
+      resolve(false);
+    };
+
+    okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCancel);
+
+    modal.classList.remove('hidden');
+  });
+}
+

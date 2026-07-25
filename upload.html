@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Upload new songs, cover art, and music details to Musiqo Music Player.">
+  <title>Musiqo Studio - Upload Song</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" type="image/jpeg" href="assets/logo.jpg">
+  <link rel="shortcut icon" type="image/jpeg" href="assets/logo.jpg">
+  <link rel="apple-touch-icon" href="assets/logo.jpg">
+</head>
+<body class="upload-page-body">
+
+  <!-- ========== AMBIENT BACKGROUND ========== -->
+  <div class="ambient-bg">
+    <div class="ambient-orb orb-1" id="orb1" style="background: #ff416c;"></div>
+    <div class="ambient-orb orb-2" id="orb2" style="background: #8a2be2;"></div>
+    <div class="ambient-orb orb-3" id="orb3" style="background: #1a0b2e;"></div>
+  </div>
+  <div class="ambient-overlay"></div>
+
+  <!-- ========== HEADER NAV ========== -->
+  <header class="app-header upload-header">
+    <div class="header-logo">
+      <img src="assets/logo.jpg" alt="Musiqo Logo" class="brand-logo-img">
+      <h1 class="app-title">Musiqo Studio</h1>
+    </div>
+    <div class="header-actions">
+      <a href="index.html" class="nav-btn secondary-btn">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
+        Go to Main Player
+      </a>
+    </div>
+  </header>
+
+  <!-- ========== UPLOAD CONTAINER ========== -->
+  <main class="upload-container">
+    <div class="upload-card-wrapper">
+
+      <div class="upload-header-text">
+        <h2>✨ Upload New Track</h2>
+        <p>Add your music file, album cover art, and metadata. Your song will instantly appear on your Musiqo main player website.</p>
+      </div>
+
+      <form id="uploadForm" class="upload-form">
+
+        <!-- Top Section: Dropzones Grid -->
+        <div class="dropzones-grid">
+          
+          <!-- Audio File Upload Dropzone -->
+          <div class="form-group dropzone-group">
+            <label class="form-label">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+              Song Audio File <span class="required-star">*</span>
+            </label>
+            <div class="dropzone" id="audioDropzone">
+              <input type="file" id="audioInput" accept="audio/*" hidden>
+              <div class="dropzone-content" id="audioDropContent">
+                <div class="dropzone-icon audio-icon">
+                  <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
+                </div>
+                <div class="dropzone-title">Click or Drag & Drop Song Audio</div>
+                <div class="dropzone-subtitle">Supports MP3, WAV, AAC, M4A, FLAC, OGG</div>
+              </div>
+              <!-- Audio Preview State -->
+              <div class="dropzone-preview hidden" id="audioPreview">
+                <div class="audio-file-badge">
+                  <svg viewBox="0 0 24 24" width="24" height="24" fill="#ffa502"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55C7.79 13 6 14.79 6 17s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>
+                  <div class="audio-meta">
+                    <span class="file-name" id="audioFileName">song.mp3</span>
+                    <span class="file-size" id="audioFileSize">0 MB • 0:00</span>
+                  </div>
+                </div>
+                <audio id="audioPreviewPlayer" controls class="mini-audio-player"></audio>
+                <button type="button" class="remove-file-btn" id="removeAudioBtn" title="Remove Audio">Change Audio</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Cover Image Upload Dropzone -->
+          <div class="form-group dropzone-group">
+            <label class="form-label">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M21 19V5c0-1.1-.9-2-2-2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2zM8.5 13.5l2.5 3.01L14.5 12l4.5 6H5l3.5-4.5z"/></svg>
+              Song Cover Art <span class="required-star">*</span>
+            </label>
+            <div class="dropzone" id="coverDropzone">
+              <input type="file" id="coverInput" accept="image/*" hidden>
+              <div class="dropzone-content" id="coverDropContent">
+                <div class="dropzone-icon image-icon">
+                  <svg viewBox="0 0 24 24" width="36" height="36" fill="currentColor"><path d="M19 7v2.99s-1.99.01-2 0V7h-3s.01-1.99 0-2h3V2h2v3h3v2h-3zm-3 4V8h-3V5H5c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-8h-3zM5 19l3-4 2 3 3-4 4 5H5z"/></svg>
+                </div>
+                <div class="dropzone-title">Click or Drag & Drop Song Cover Image</div>
+                <div class="dropzone-subtitle">Supports PNG, JPG, JPEG, WEBP</div>
+              </div>
+              <!-- Cover Image Preview State -->
+              <div class="dropzone-preview hidden" id="coverPreview">
+                <img id="coverPreviewImg" src="" alt="Song Cover Preview" class="cover-preview-img">
+                <button type="button" class="remove-file-btn" id="removeCoverBtn" title="Remove Cover">Change Cover</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Middle Section: Track Details Form Fields -->
+        <div class="details-grid">
+
+          <div class="form-group">
+            <label for="songTitle" class="form-label">Song Title <span class="required-star">*</span></label>
+            <input type="text" id="songTitle" class="form-input" placeholder="e.g. Starboy / Midnight Rain" required>
+          </div>
+
+          <div class="form-group">
+            <label for="artistName" class="form-label">Artist Name(s) <span class="required-star">*</span></label>
+            <input type="text" id="artistName" class="form-input" placeholder="e.g. Seedhe Maut / The Weeknd" required>
+          </div>
+
+          <div class="form-group">
+            <label for="albumName" class="form-label">Album / Collection Name</label>
+            <input type="text" id="albumName" class="form-input" placeholder="e.g. Single / Voicenotes">
+          </div>
+
+        </div>
+
+        <!-- Bottom Section: Color Theme Picker for Ambient Glow -->
+        <div class="theme-colors-section">
+          <label class="form-label">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 3c-4.97 0-9 4.03-9 9 0 2.12.74 4.07 1.97 5.61L4.35 19.4c-.39.39-.39 1.02 0 1.41.39.39 1.02.39 1.41 0l1.9-1.9C9.25 19.56 10.58 20 12 20c4.97 0 9-4.03 9-9s-4.03-9-9-9zm0 15c-3.31 0-6-2.69-6-6s2.69-6 6-6 6 2.69 6 6-2.69 6-6 6z"/></svg>
+            Ambient Player Aura Colors (Background Glow)
+          </label>
+          <div class="color-picker-row">
+            <div class="color-picker-box">
+              <span class="color-label">Primary Color</span>
+              <input type="color" id="primaryColor" value="#ff416c" class="color-input">
+            </div>
+            <div class="color-picker-box">
+              <span class="color-label">Secondary Color</span>
+              <input type="color" id="secondaryColor" value="#8a2be2" class="color-input">
+            </div>
+            <div class="color-picker-box">
+              <span class="color-label">Deep Accent</span>
+              <input type="color" id="accentColor" value="#1a0b2e" class="color-input">
+            </div>
+            <button type="button" class="preset-colors-btn" id="extractColorsBtn" title="Extract colors from uploaded cover art">
+              ✨ Auto-Extract from Cover
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button Row -->
+        <div class="form-actions">
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M9 16h6v-6h4l-7-7-7 7h4v6zm-4 2h14v2H5v-2z"/></svg>
+            Upload Song to Musiqo
+          </button>
+        </div>
+
+      </form>
+
+    </div>
+  </main>
+
+  <!-- ========== CUSTOM CONFIRMATION MODAL ========== -->
+  <div class="modal-overlay hidden" id="customConfirmModal">
+    <div class="modal-card confirm-modal-card">
+      <div class="confirm-icon-box" id="confirmModalIcon">🗑️</div>
+      <h4 class="confirm-title" id="confirmModalTitle">Are you sure?</h4>
+      <p class="confirm-message" id="confirmModalMessage">This action cannot be undone.</p>
+      <div class="confirm-actions">
+        <button type="button" class="modal-action-btn secondary-action" id="confirmModalCancelBtn">Cancel</button>
+        <button type="button" class="modal-action-btn danger-action" id="confirmModalOkBtn">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <script src="db.js"></script>
+  <script src="upload.js"></script>
+</body>
+</html>
