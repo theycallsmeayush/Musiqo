@@ -1882,6 +1882,7 @@ function showConfirmDialog({ title = 'Confirm Action', message = 'Are you sure?'
     };
 
     okBtn.addEventListener('click', onOk);
+    cancelBtn.addEventListener('click', onCancel);
     modal.classList.remove('hidden');
   });
 }
