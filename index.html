@@ -92,6 +92,10 @@
         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M14 10H2v2h12v-2zm0-4H2v2h12V6zm4 8v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM2 16h8v-2H2v2z"/></svg>
         Add to Playlist
       </button>
+      <button class="menu-item hidden" id="menuOptionRemoveFromPlaylist">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 13H5v-2h14v2z"/></svg>
+        Remove from Playlist
+      </button>
       <button class="menu-item" id="menuOptionDownload">
         <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
         Download Song (With Cover & Info)
@@ -159,6 +163,23 @@
     </div>
   </div>
 
+  <!-- ========== DEDICATED STANDALONE SEARCH MODAL ========== -->
+  <div class="search-modal-overlay hidden" id="standaloneSearchModal">
+    <div class="search-modal-card">
+      <div class="search-modal-header">
+        <div class="search-input-box">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="dedicatedSearchInput" placeholder="Search songs, artists, albums..." autocomplete="off">
+          <button class="search-clear-btn" id="dedicatedSearchClear" title="Clear text">✕</button>
+        </div>
+        <button class="search-close-pill" id="dedicatedSearchClose" title="Close Search">Esc</button>
+      </div>
+      <div class="search-results-container" id="dedicatedSearchResults">
+        <div class="search-empty-state">Start typing to search your music library...</div>
+      </div>
+    </div>
+  </div>
+
   <!-- Global Toast Notification Container -->
   <div class="toast-container" id="toastContainer"></div>
 
@@ -169,6 +190,9 @@
   <aside class="vision-dock">
     <button class="dock-btn library-toggle" title="Open Library">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M4 6h16v2H4zm0 5h16v2H4zm0 5h16v2H4z"/></svg>
+    </button>
+    <button class="dock-btn" id="dockSearchBtn" title="Search Songs">
+      <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
     </button>
     <a href="upload.html" class="dock-btn" title="Upload Custom Song">
       <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M19 13h-6v6h-2v-6H5v-2h6V5h2v6h6v2z"/></svg>
@@ -183,6 +207,14 @@
     <div class="header-logo">
       <img src="assets/logo.jpg" alt="Musiqo Logo" class="brand-logo-img">
       <h1 class="app-title">Musiqo</h1>
+    </div>
+    <div class="header-user-nav">
+      <div id="headerAuthArea">
+        <button class="nav-btn auth-nav-btn" id="openAuthModalBtn">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+          Login / Signup
+        </button>
+      </div>
     </div>
   </header>
 
@@ -263,6 +295,11 @@
 
       <!-- Right: Extra Controls -->
       <div class="controls-right">
+        <!-- Song Options -->
+        <button class="player-btn btn-song-options" id="playerBarOptionsBtn" title="Song Options" aria-label="Song Options">
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor"><path d="M12 8c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm0 2c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2z"/></svg>
+        </button>
+
         <!-- Volume -->
         <div class="volume-control">
           <button class="player-btn btn-volume" id="btnVolume" title="Mute/Unmute Volume" aria-label="Mute/Unmute Volume">
@@ -275,8 +312,273 @@
     </div>
   </div>
 
+
+
   <!-- ========== AUDIO ELEMENT ========== -->
   <audio id="audioPlayer" preload="metadata"></audio>
+
+  <!-- ========== AUTHENTICATION MODAL (LOGIN & CREATE ACCOUNT) ========== -->
+  <div class="modal-overlay hidden" id="authModal">
+    <div class="modal-card auth-modal-card">
+      <div class="modal-header auth-modal-header">
+        <div class="auth-header-title">
+          <img src="assets/logo.jpg" alt="Musiqo Logo" class="auth-brand-logo">
+          <h3 id="authModalTitle">Welcome to Musiqo</h3>
+        </div>
+        <button class="modal-close-btn" id="closeAuthModalBtn">&times;</button>
+      </div>
+
+      <!-- Auth Mode Segmented Tabs -->
+      <div class="auth-mode-tabs">
+        <button class="auth-tab-btn active" id="authTabLogin" data-tab="login">Login</button>
+        <button class="auth-tab-btn" id="authTabRegister" data-tab="register">Create Account</button>
+      </div>
+
+      <div class="modal-body auth-modal-body">
+        
+        <!-- LOGIN PANEL -->
+        <form id="loginForm" class="auth-form-panel">
+          <!-- Login Role Selector Toggle -->
+          <div class="role-selector-container">
+            <span class="role-selector-label">Login Type:</span>
+            <div class="role-pills">
+              <button type="button" class="role-pill active" id="rolePillUser" data-role="user">
+                👤 User Login
+              </button>
+              <button type="button" class="role-pill" id="rolePillAdmin" data-role="admin">
+                👑 Admin Login
+              </button>
+            </div>
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div class="auth-error-note hidden" id="authErrorNote"></div>
+
+          <div class="form-group auth-field">
+            <label class="form-label" for="loginUsername">Username</label>
+            <div class="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              <input type="text" id="loginUsername" placeholder="Enter username" autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="form-group auth-field">
+            <label class="form-label" for="loginPassword">Password</label>
+            <div class="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+              <input type="password" id="loginPassword" placeholder="Enter password" autocomplete="current-password" required>
+            </div>
+          </div>
+
+          <button type="submit" class="modal-action-btn primary-action auth-submit-btn" id="loginSubmitBtn">
+            Sign In as User
+          </button>
+        </form>
+
+        <!-- CREATE ACCOUNT PANEL -->
+        <form id="registerForm" class="auth-form-panel hidden">
+          <div class="auth-info-banner">
+            <span>✨ Sign up for a Listener Account. (Admin accounts are assigned by existing Admins).</span>
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div class="auth-error-note hidden" id="registerErrorNote"></div>
+
+          <div class="form-group auth-field">
+            <label class="form-label" for="registerUsername">Username</label>
+            <div class="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              <input type="text" id="registerUsername" placeholder="Choose a username (min 3 chars)" autocomplete="username" required>
+            </div>
+          </div>
+
+          <div class="form-group auth-field">
+            <label class="form-label" for="registerPassword">Password</label>
+            <div class="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+              <input type="password" id="registerPassword" placeholder="Create a password" autocomplete="new-password" required>
+            </div>
+          </div>
+
+          <button type="submit" class="modal-action-btn primary-action auth-submit-btn" id="registerSubmitBtn">
+            Create User Account
+          </button>
+        </form>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ADMIN USER MANAGEMENT MODAL ========== -->
+  <div class="modal-overlay hidden" id="adminUserMgmtModal">
+    <div class="modal-card admin-mgmt-card">
+      <div class="modal-header">
+        <div class="admin-header-title">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#ffd700"><path d="M5 16L3 5l5.5 5L12 4l3.5 6L21 5l-2 11H5zm14 3c0 .55-.45 1-1 1H6c-.55 0-1-.45-1-1v-1h14v1z"/></svg>
+          <h3>Admin Management - Registered Users</h3>
+        </div>
+        <button class="modal-close-btn" id="closeAdminMgmtBtn">&times;</button>
+      </div>
+      <div class="modal-body admin-mgmt-body">
+        <p class="admin-mgmt-subtitle">Assign Admin status or edit user credentials:</p>
+        
+        <!-- User Search Bar -->
+        <div class="admin-search-wrapper">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+          <input type="text" id="adminUserSearchInput" placeholder="Search registered users by name, @username, or role..." autocomplete="off">
+        </div>
+
+        <div class="admin-users-list" id="adminUsersList">
+          <!-- Injected dynamically -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== ADMIN EDIT USER MODAL ========== -->
+  <div class="modal-overlay hidden" id="adminEditUserModal">
+    <div class="modal-card auth-modal-card">
+      <div class="modal-header">
+        <div class="admin-header-title">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#ffd700"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
+          <h3 id="adminEditUserTitle">Admin Edit User</h3>
+        </div>
+        <button class="modal-close-btn" id="closeAdminEditUserBtn">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <form id="adminEditUserForm">
+          <input type="hidden" id="adminTargetOriginalUsername">
+
+          <div class="form-group auth-field">
+            <label class="form-label" for="adminEditDisplayName">Display Name</label>
+            <div class="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+              <input type="text" id="adminEditDisplayName" placeholder="User Display Name">
+            </div>
+          </div>
+
+          <div class="form-group auth-field">
+            <label class="form-label" for="adminEditUsername">Username</label>
+            <div class="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+              <input type="text" id="adminEditUsername" placeholder="Username" required>
+            </div>
+          </div>
+
+          <div class="form-group auth-field">
+            <label class="form-label" for="adminEditNewPassword">Reset User Password</label>
+            <div class="auth-input-wrapper">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+              <input type="password" id="adminEditNewPassword" placeholder="Enter new password to reset (optional)">
+            </div>
+          </div>
+
+          <div class="auth-error-note hidden" id="adminEditUserErrorNote"></div>
+
+          <div class="modal-actions profile-actions">
+            <button type="button" class="modal-action-btn secondary-action" id="cancelAdminEditUserBtn">Cancel</button>
+            <button type="submit" class="modal-action-btn primary-action">Save User Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== USER PROFILE & SETTINGS MODAL ========== -->
+  <div class="modal-overlay hidden" id="profileModal">
+    <div class="modal-card profile-modal-card">
+      <div class="modal-header">
+        <div class="profile-modal-title">
+          <svg viewBox="0 0 24 24" width="22" height="22" fill="#ff4b2b"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+          <h3>Profile & Account Settings</h3>
+        </div>
+        <button class="modal-close-btn" id="closeProfileModalBtn">&times;</button>
+      </div>
+
+      <div class="modal-body profile-modal-body">
+        <form id="profileForm">
+          
+          <!-- Avatar Customization Section -->
+          <div class="profile-section">
+            <h4 class="profile-section-title">Profile Picture (PFP)</h4>
+            <div class="avatar-edit-container">
+              <div class="avatar-preview-box">
+                <img src="assets/logo.jpg" alt="Profile Picture" class="profile-avatar-preview" id="profileAvatarPreview">
+                <button type="button" class="avatar-upload-overlay-btn" id="uploadAvatarBtn" title="Upload custom photo">
+                  <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M3 4V1h2v3h3v2H5v3H3V6H0V4h3zm3 6V7h3V4h7l1.83 2H21c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H5c-1.1 0-2-.9-2-2V10h3zm7 9c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-3.2-5c0 1.77 1.43 3.2 3.2 3.2s3.2-1.43 3.2-3.2-1.43-3.2-3.2-3.2-3.2 1.43-3.2 3.2z"/></svg>
+                </button>
+                <input type="file" id="avatarFileInput" accept="image/*" hidden>
+              </div>
+
+              <!-- Preset Avatars Gallery -->
+              <div class="preset-avatars-box">
+                <span class="preset-label">Or select a preset avatar:</span>
+                <div class="preset-avatars-grid">
+                  <button type="button" class="preset-avatar-btn" data-preset="cyber" title="Cyberpunk">🤖</button>
+                  <button type="button" class="preset-avatar-btn" data-preset="neon" title="Neon Cat">😸</button>
+                  <button type="button" class="preset-avatar-btn" data-preset="star" title="Star Lord">🌟</button>
+                  <button type="button" class="preset-avatar-btn" data-preset="fire" title="Blaze">🔥</button>
+                  <button type="button" class="preset-avatar-btn" data-preset="crown" title="Crown">👑</button>
+                  <button type="button" class="preset-avatar-btn" data-preset="dj" title="DJ Synth">🎧</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Basic Info Section -->
+          <div class="profile-section">
+            <h4 class="profile-section-title">Personal Information</h4>
+            
+            <div class="form-group auth-field">
+              <label class="form-label" for="profileDisplayName">Display Name</label>
+              <div class="auth-input-wrapper">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <input type="text" id="profileDisplayName" placeholder="e.g. Ayush / Musiqo Fan">
+              </div>
+            </div>
+
+            <div class="form-group auth-field">
+              <label class="form-label" for="profileUsername">Username (Login Handle)</label>
+              <div class="auth-input-wrapper">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                <input type="text" id="profileUsername" placeholder="Enter username" required>
+              </div>
+            </div>
+          </div>
+
+          <!-- Security Section -->
+          <div class="profile-section">
+            <h4 class="profile-section-title">Change Password</h4>
+            
+            <div class="form-group auth-field">
+              <label class="form-label" for="profileCurrentPassword">Current Password (Required for password changes)</label>
+              <div class="auth-input-wrapper">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                <input type="password" id="profileCurrentPassword" placeholder="Enter current password">
+              </div>
+            </div>
+
+            <div class="form-group auth-field">
+              <label class="form-label" for="profileNewPassword">New Password</label>
+              <div class="auth-input-wrapper">
+                <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M12 17c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zm6-9h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zm-6 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+                <input type="password" id="profileNewPassword" placeholder="New password (min 4 chars)">
+              </div>
+            </div>
+          </div>
+
+          <!-- Error Alert Banner -->
+          <div class="auth-error-note hidden" id="profileErrorNote"></div>
+
+          <div class="modal-actions profile-actions">
+            <button type="button" class="modal-action-btn secondary-action" id="cancelProfileBtn">Cancel</button>
+            <button type="submit" class="modal-action-btn primary-action" id="saveProfileBtn">Save Profile Changes</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
 
   <script src="db.js"></script>
   <script src="app.js"></script>

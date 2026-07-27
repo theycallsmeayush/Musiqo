@@ -43,7 +43,28 @@ document.addEventListener('DOMContentLoaded', () => {
   let audioDuration = 0;
   let coverDataUrl = null;
 
+  // ─── Admin Role Guard ───
+  function checkAdminAccess() {
+    const user = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+    const overlay = document.getElementById('accessDeniedOverlay');
+    const adminBtn = document.getElementById('openAdminLoginFromUploadBtn');
+
+    if (!user || user.role !== 'admin') {
+      if (overlay) overlay.classList.remove('hidden');
+      if (adminBtn) {
+        adminBtn.onclick = () => {
+          window.location.href = 'index.html?action=login_admin';
+        };
+      }
+      return false;
+    } else {
+      if (overlay) overlay.classList.add('hidden');
+      return true;
+    }
+  }
+
   // Initial load
+  checkAdminAccess();
   loadUploadedTracksList();
   updateAmbientOrbs();
 
@@ -381,6 +402,12 @@ document.addEventListener('DOMContentLoaded', () => {
         // Delete button listener
         const delBtn = item.querySelector('.delete-btn');
         delBtn.addEventListener('click', async () => {
+          const currentUser = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+          if (!currentUser || currentUser.role !== 'owner') {
+            showToast('🔒 Only the Owner can delete songs from Musiqo Studio.', 'error');
+            return;
+          }
+
           const confirmed = await showConfirmDialog({
             title: 'Delete Song',
             message: `Are you sure you want to delete "${track.title}"?`,

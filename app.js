@@ -211,6 +211,8 @@ function fetchTrackDurations() {
   TRACKS.forEach((track) => {
     if (track.audio) {
       const tempAudio = new Audio();
+      tempAudio.muted = true;
+      tempAudio.volume = 0;
       tempAudio.preload = 'metadata';
       tempAudio.src = track.audio;
       tempAudio.onloadedmetadata = () => {
@@ -221,6 +223,7 @@ function fetchTrackDurations() {
             itemEl.textContent = formatTime(track.duration);
           }
         }
+        tempAudio.src = '';
       };
     }
   });
@@ -391,7 +394,7 @@ function buildLibrary() {
 
     item.addEventListener('click', (e) => {
       if (!e.target.closest('.library-item-options-btn')) {
-        navigateTo(originalIndex);
+        navigateTo(originalIndex, true);
         updateLibraryActive();
       }
     });
@@ -483,14 +486,14 @@ let currentVisualIndex = 0;
 let physicsAnimId = null;
 let lastPhysicsTime = performance.now();
 
-// ─── Uncapped 240+ FPS Infinite Circular Loop ───
+// ─── Uncapped 500+ FPS Hardware-Accelerated Physics Engine Loop ───
 function startPhysicsEngine() {
   function renderFrame(now) {
-    const dt = Math.min((now - lastPhysicsTime) / 1000, 0.05);
+    const dt = Math.min((now - lastPhysicsTime) / 1000, 0.033);
     lastPhysicsTime = now;
 
-    // Frame-rate independent exponential lerp for ultra-smooth 1.2s transition
-    const lerpRate = 1 - Math.exp(-4.5 * dt);
+    // Frame-rate independent exponential physics lerp for ultra-smooth 500+ FPS transition
+    const lerpRate = 1 - Math.exp(-5.5 * dt);
     currentVisualIndex += (targetTrackIndex - currentVisualIndex) * lerpRate;
 
     const N = TRACKS.length;
@@ -523,7 +526,7 @@ function startPhysicsEngine() {
         scale = centerBlend * 1.05 + abs * 0.9;
       }
 
-      card.style.transform = `translateX(${tx.toFixed(2)}px) translateZ(${tz.toFixed(2)}px) rotateY(${ry.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
+      card.style.transform = `translate3d(${tx.toFixed(2)}px, 0px, ${tz.toFixed(2)}px) rotateY(${ry.toFixed(2)}deg) scale(${scale.toFixed(3)})`;
       card.style.opacity = opacity.toFixed(3);
       card.style.zIndex = Math.round(10 - abs);
       card.style.pointerEvents = abs <= 2.5 ? 'auto' : 'none';
@@ -542,7 +545,7 @@ function positionCards() {
 }
 
 // ─── Circular Infinite Navigation ───
-function navigateTo(index) {
+function navigateTo(index, forcePlay = null) {
   if (index < 0 || index >= TRACKS.length) return;
   const N = TRACKS.length;
 
@@ -555,6 +558,10 @@ function navigateTo(index) {
 
   currentTrackIndex = index;
   targetTrackIndex += circularDiff;
+
+  if (forcePlay !== null) {
+    isPlaying = forcePlay;
+  }
 
   loadTrack(index, isPlaying);
   updateAmbientBackground();
@@ -591,11 +598,11 @@ function prevTrack() {
 }
 
 // ─── Load Track ───
-function loadTrack(index, autoplay) {
+function loadTrack(index, autoplay = false) {
   const track = TRACKS[index];
   if (!track) return;
 
-  // Reset simulated timer if active
+  // Stop any active simulation loop
   if (simulationInterval) {
     cancelAnimationFrame(simulationInterval);
     simulationInterval = null;
@@ -615,6 +622,7 @@ function loadTrack(index, autoplay) {
   if (track.audio) {
     const isDifferentTrack = !audio.src || (!audio.src.endsWith(encodeURI(track.audio)) && !audio.src.endsWith(track.audio) && audio.src !== track.audio);
     if (isDifferentTrack) {
+      audio.pause();
       audio.src = track.audio;
       audio.currentTime = 0;
     }
@@ -626,14 +634,18 @@ function loadTrack(index, autoplay) {
         console.warn('Audio play failed, switching to simulated playback:', err);
         simulatePlayback();
       });
-    } else if (!isPlaying) {
+    } else {
+      isPlaying = false;
       audio.pause();
+      updatePlayButton();
       updateProgressUI(0, audio.duration || SIMULATED_DURATION);
     }
   } else {
+    isPlaying = false;
     audio.pause();
     audio.src = '';
     audio.currentTime = 0;
+    updatePlayButton();
     updateProgressUI(0, SIMULATED_DURATION);
     if (autoplay) {
       simulatePlayback();
@@ -795,8 +807,23 @@ function setupPlayerControls() {
     }
   });
 
+  const playerBarOptionsBtn = $('#playerBarOptionsBtn');
+  if (playerBarOptionsBtn) {
+    playerBarOptionsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const track = TRACKS[currentTrackIndex];
+      if (track) {
+        openSongOptionsMenu(track, playerBarOptionsBtn);
+      }
+    });
+  }
+
   // Real HTML5 Audio Event Listeners
   audio.addEventListener('play', () => {
+    if (simulationInterval) {
+      cancelAnimationFrame(simulationInterval);
+      simulationInterval = null;
+    }
     isPlaying = true;
     updatePlayButton();
   });
@@ -825,8 +852,14 @@ function setupPlayerControls() {
     if (repeatMode === 2) {
       audio.currentTime = 0;
       audio.play().catch(() => {});
-    } else {
+    } else if (repeatMode === 1) {
       nextTrack();
+    } else {
+      if (currentTrackIndex < TRACKS.length - 1) {
+        nextTrack();
+      } else {
+        pausePlayback();
+      }
     }
   });
 
@@ -986,6 +1019,12 @@ function setupDragSwipe() {
 // ─── Keyboard Navigation ───
 function setupKeyboard() {
   document.addEventListener('keydown', (e) => {
+    // Ignore global media hotkeys when user is typing inside search or input fields
+    const tag = e.target && e.target.tagName ? e.target.tagName.toUpperCase() : '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || e.target.isContentEditable) {
+      return;
+    }
+
     switch (e.key) {
       case 'ArrowLeft': prevTrack(); break;
       case 'ArrowRight': nextTrack(); break;
@@ -1146,11 +1185,127 @@ function drawCanvasVisualizer() {
   requestAnimationFrame(draw);
 }
 
+// ─── Dedicated Standalone Search Modal ───
+function setupStandaloneSearchModal() {
+  const modal = $('#standaloneSearchModal');
+  const input = $('#dedicatedSearchInput');
+  const resultsContainer = $('#dedicatedSearchResults');
+  const clearBtn = $('#dedicatedSearchClear');
+  const closeBtn = $('#dedicatedSearchClose');
+  const dockSearchBtn = $('#dockSearchBtn');
+
+  if (!modal || !input || !resultsContainer) return;
+
+  function openSearchModal() {
+    modal.classList.remove('hidden');
+    setTimeout(() => input.focus(), 150);
+  }
+
+  function closeSearchModal() {
+    modal.classList.add('hidden');
+    input.value = '';
+    if (clearBtn) clearBtn.classList.remove('visible');
+    renderSearchResults('');
+  }
+
+  function renderSearchResults(query) {
+    const q = query.toLowerCase().trim();
+    if (!q) {
+      resultsContainer.innerHTML = '<div class="search-empty-state">Start typing to search your music library...</div>';
+      return;
+    }
+
+    const matches = TRACKS.filter(t => 
+      t.title.toLowerCase().includes(q) || 
+      t.artist.toLowerCase().includes(q) || 
+      (t.album && t.album.toLowerCase().includes(q))
+    );
+
+    if (matches.length === 0) {
+      resultsContainer.innerHTML = `<div class="search-empty-state">No songs found matching "${query}"</div>`;
+      return;
+    }
+
+    resultsContainer.innerHTML = matches.map(t => {
+      const idx = TRACKS.indexOf(t);
+      return `
+        <div class="search-result-item" data-index="${idx}">
+          <img src="${t.cover}" class="search-result-thumb" alt="${t.title}">
+          <div class="search-result-meta">
+            <div class="search-result-title">${t.title}</div>
+            <div class="search-result-artist">${t.artist}${t.album ? ' • ' + t.album : ''}</div>
+          </div>
+          <button class="search-result-play-btn" title="Play Song">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor"><path d="M8 5v14l11-7z"/></svg>
+          </button>
+        </div>
+      `;
+    }).join('');
+
+    $$('.search-result-item', resultsContainer).forEach(item => {
+      item.addEventListener('click', () => {
+        const idx = parseInt(item.getAttribute('data-index'), 10);
+        if (!isNaN(idx)) {
+          navigateTo(idx, true);
+          closeSearchModal();
+        }
+      });
+    });
+  }
+
+  // Open Search Modal when clicking left dock search button
+  if (dockSearchBtn) {
+    dockSearchBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      openSearchModal();
+    });
+  }
+
+  // Input event
+  input.addEventListener('input', (e) => {
+    const val = e.target.value;
+    if (clearBtn) clearBtn.classList.toggle('visible', val.length > 0);
+    renderSearchResults(val);
+  });
+
+  // Clear button
+  if (clearBtn) {
+    clearBtn.addEventListener('click', () => {
+      input.value = '';
+      clearBtn.classList.remove('visible');
+      renderSearchResults('');
+      input.focus();
+    });
+  }
+
+  // Close button
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeSearchModal);
+  }
+
+  // Click outside to close
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      closeSearchModal();
+    }
+  });
+
+  // Keyboard shortcut Esc to close
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && !modal.classList.contains('hidden')) {
+      closeSearchModal();
+    }
+  });
+}
+
 // Start canvas visualizer after DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
   setTimeout(drawCanvasVisualizer, 500);
   setupPlaylistSystem();
   setupSongOptionsMenu();
+  setupStandaloneSearchModal();
+  setupAuthSystem();
+  setupProfileSystem();
 });
 
 /* ================================================
@@ -1232,7 +1387,7 @@ function setupPlaylistSystem() {
         return;
       }
 
-      await window.musiqoDB.savePlaylist({
+      const createdPl = await window.musiqoDB.savePlaylist({
         name: name,
         description: desc,
         trackIds: selectedTrackForPlaylist ? [selectedTrackForPlaylist.id] : []
@@ -1249,6 +1404,8 @@ function setupPlaylistSystem() {
         selectedTrackForPlaylist = null;
         const addToPlaylistModal = $('#addToPlaylistModal');
         if (addToPlaylistModal) addToPlaylistModal.classList.add('hidden');
+
+        openPlaylistView(createdPl);
       }
     });
   }
@@ -1311,18 +1468,20 @@ async function buildPlaylistsView() {
     `;
 
     // Click to view playlist songs
-    card.querySelector('.play-pl-btn').addEventListener('click', (e) => {
-      e.stopPropagation();
-      activePlaylistFilter = pl;
-      
-      const banner = $('#activePlaylistBanner');
-      const bannerTitle = $('#bannerPlaylistTitle');
-      if (bannerTitle) bannerTitle.textContent = pl.name;
-      if (banner) banner.classList.remove('hidden');
+    const openPl = () => openPlaylistView(pl);
 
-      // Switch to Songs tab
-      const tabSongsBtn = $('#tabSongsBtn');
-      if (tabSongsBtn) tabSongsBtn.click();
+    const playBtn = card.querySelector('.play-pl-btn');
+    if (playBtn) {
+      playBtn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        openPl();
+      });
+    }
+
+    card.addEventListener('click', (e) => {
+      if (!e.target.closest('.del-pl-btn')) {
+        openPl();
+      }
     });
 
     // Delete playlist
@@ -1350,6 +1509,36 @@ async function buildPlaylistsView() {
 
     container.appendChild(card);
   });
+}
+
+// ─── Open Playlist View Helper ───
+async function openPlaylistView(pl) {
+  if (!pl) return;
+  try {
+    const playlists = await window.musiqoDB.getAllPlaylists();
+    const freshPl = playlists.find(p => String(p.id) === String(pl.id)) || pl;
+    activePlaylistFilter = freshPl;
+  } catch (e) {
+    activePlaylistFilter = pl;
+  }
+  
+  const banner = $('#activePlaylistBanner');
+  const bannerTitle = $('#bannerPlaylistTitle');
+  if (bannerTitle) bannerTitle.textContent = activePlaylistFilter.name;
+  if (banner) banner.classList.remove('hidden');
+
+  // Switch to Songs tab
+  const tabSongsBtn = $('#tabSongsBtn');
+  const tabPlaylistsBtn = $('#tabPlaylistsBtn');
+  const songsView = $('#songsView');
+  const playlistsView = $('#playlistsView');
+
+  if (tabSongsBtn) tabSongsBtn.classList.add('active');
+  if (tabPlaylistsBtn) tabPlaylistsBtn.classList.remove('active');
+  if (songsView) songsView.classList.remove('hidden');
+  if (playlistsView) playlistsView.classList.add('hidden');
+
+  buildLibrary();
 }
 
 // ─── Setup Song Options Menu ───
@@ -1395,6 +1584,22 @@ function setupSongOptionsMenu() {
       }
     });
   }
+
+  // Action 4: Remove from Playlist
+  const menuRemoveFromPlaylist = $('#menuOptionRemoveFromPlaylist');
+  if (menuRemoveFromPlaylist) {
+    menuRemoveFromPlaylist.addEventListener('click', async () => {
+      if (menu) menu.classList.add('hidden');
+      if (activeMenuTrack && activePlaylistFilter) {
+        await window.musiqoDB.removeTrackFromPlaylist(activePlaylistFilter.id, activeMenuTrack.id);
+        if (activePlaylistFilter.trackIds) {
+          activePlaylistFilter.trackIds = activePlaylistFilter.trackIds.filter(id => String(id) !== String(activeMenuTrack.id));
+        }
+        showToast(`Removed "${activeMenuTrack.title}" from ${activePlaylistFilter.name}`, 'info');
+        buildLibrary();
+      }
+    });
+  }
 }
 
 // ─── Open Contextual Options Menu ───
@@ -1409,6 +1614,27 @@ function openSongOptionsMenu(track, triggerBtn) {
   if (menuTitle) menuTitle.textContent = track.title;
   if (menuArtist) menuArtist.textContent = track.artist;
 
+  // Song Deletion Permission: Only OWNER can delete songs!
+  const menuDelete = $('#menuOptionDelete');
+  const currentUser = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+  const isOwner = currentUser && currentUser.role === 'owner';
+  if (menuDelete) {
+    if (isOwner) {
+      menuDelete.classList.remove('hidden');
+    } else {
+      menuDelete.classList.add('hidden');
+    }
+  }
+
+  const menuRemoveFromPlaylist = $('#menuOptionRemoveFromPlaylist');
+  if (menuRemoveFromPlaylist) {
+    if (activePlaylistFilter) {
+      menuRemoveFromPlaylist.classList.remove('hidden');
+    } else {
+      menuRemoveFromPlaylist.classList.add('hidden');
+    }
+  }
+
   const rect = triggerBtn.getBoundingClientRect();
   menu.style.top = `${rect.bottom + window.scrollY + 4}px`;
   menu.style.left = `${Math.min(window.innerWidth - 240, rect.left - 180)}px`;
@@ -1418,6 +1644,11 @@ function openSongOptionsMenu(track, triggerBtn) {
 
 // ─── Action 1: Delete Song Handler ───
 async function deleteTrackHandler(track) {
+  const currentUser = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+  if (!currentUser || currentUser.role !== 'owner') {
+    showToast('🔒 Only the Owner can delete songs.', 'error');
+    return;
+  }
   const confirmed = await showConfirmDialog({
     title: 'Delete Song',
     message: `Are you sure you want to delete "${track.title}" from Musiqo?`,
@@ -1492,6 +1723,14 @@ async function openAddToPlaylistModal(track) {
         const added = await window.musiqoDB.addTrackToPlaylist(pl.id, track.id);
         if (added) {
           showToast(`🎵 Added "${track.title}" to ${pl.name}!`, 'success');
+          if (activePlaylistFilter && String(activePlaylistFilter.id) === String(pl.id)) {
+            if (!activePlaylistFilter.trackIds) activePlaylistFilter.trackIds = [];
+            const strId = String(track.id);
+            if (!activePlaylistFilter.trackIds.map(String).includes(strId)) {
+              activePlaylistFilter.trackIds.push(track.id);
+            }
+            buildLibrary();
+          }
         } else {
           showToast(`"${track.title}" is already in ${pl.name}`, 'info');
         }
@@ -1643,9 +1882,709 @@ function showConfirmDialog({ title = 'Confirm Action', message = 'Are you sure?'
     };
 
     okBtn.addEventListener('click', onOk);
-    cancelBtn.addEventListener('click', onCancel);
-
     modal.classList.remove('hidden');
   });
+}
+
+/* ================================================
+   USER & ADMIN AUTHENTICATION SYSTEM
+   ================================================ */
+
+let selectedLoginRole = 'user'; // 'user' or 'admin'
+
+async function updateAuthUI() {
+  const sessionUser = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+  const headerAuthArea = $('#headerAuthArea');
+  const uploadLinks = $$('a[href="upload.html"]');
+  const closeBtn = $('#closeAuthModalBtn');
+  const mainStage = $('.app-container');
+
+  let user = sessionUser;
+  if (sessionUser && window.musiqoDB.getUserByUsername) {
+    try {
+      const fullUser = await window.musiqoDB.getUserByUsername(sessionUser.username);
+      if (fullUser) user = fullUser;
+    } catch (e) {}
+  }
+
+  // Role-Based Upload Access Control:
+  // Regular Users: Hide upload links
+  // Admins & Owners: Show upload links
+  const canUpload = user && (user.role === 'admin' || user.role === 'owner');
+  uploadLinks.forEach(link => {
+    if (canUpload) {
+      link.style.display = '';
+    } else {
+      link.style.display = 'none';
+    }
+  });
+
+  if (!user) {
+    // Unauthenticated State: Pause playback, lock main page & force mandatory auth gate
+    pausePlayback();
+    if (mainStage) mainStage.classList.add('app-locked');
+    if (closeBtn) closeBtn.style.display = 'none';
+
+    openAuthModal('login');
+
+    if (headerAuthArea) {
+      headerAuthArea.innerHTML = `
+        <button class="nav-btn auth-nav-btn" id="openAuthModalBtn">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>
+          Login / Signup
+        </button>
+      `;
+      const openBtn = $('#openAuthModalBtn');
+      if (openBtn) openBtn.addEventListener('click', () => openAuthModal('login'));
+    }
+  } else {
+    // Authenticated State: Unlock main page
+    if (mainStage) mainStage.classList.remove('app-locked');
+    if (closeBtn) closeBtn.style.display = '';
+    closeAuthModal();
+
+    if (headerAuthArea) {
+      const isOwner = user.role === 'owner';
+      const isAdmin = user.role === 'admin';
+
+      let roleClass = 'user';
+      let roleTag = '👤 USER';
+      if (isOwner) {
+        roleClass = 'owner';
+        roleTag = '💎 OWNER';
+      } else if (isAdmin) {
+        roleClass = 'admin';
+        roleTag = '👑 ADMIN';
+      }
+
+      const nameToShow = user.displayName || user.username;
+      const avatarSrc = user.avatar || 'assets/logo.jpg';
+
+      let adminManageBtnHtml = '';
+      if (isAdmin || isOwner) {
+        adminManageBtnHtml = `<button class="profile-action-btn" id="openAdminMgmtBtn" title="Manage Users & Promote Admins/Owners">Users</button>`;
+      }
+
+      headerAuthArea.innerHTML = `
+        <div class="user-profile-badge">
+          <img src="${avatarSrc}" alt="Avatar" class="user-profile-badge-avatar" id="headerProfileAvatar" onerror="this.src='assets/logo.jpg'">
+          <div class="profile-info">
+            <span class="profile-username" title="@${escapeHtml(user.username)}">${escapeHtml(nameToShow)}</span>
+            <span class="profile-role-tag ${roleClass}">${roleTag}</span>
+          </div>
+          <button class="profile-action-btn" id="openProfileSettingsBtn" title="Profile & Account Settings">⚙️ Profile</button>
+          ${adminManageBtnHtml}
+          <button class="profile-action-btn" id="logoutBtn" title="Sign Out">Logout</button>
+        </div>
+      `;
+
+      const settingsBtn = $('#openProfileSettingsBtn');
+      if (settingsBtn) {
+        settingsBtn.addEventListener('click', openProfileModal);
+      }
+
+      const logoutBtn = $('#logoutBtn');
+      if (logoutBtn) {
+        logoutBtn.addEventListener('click', async () => {
+          const confirmed = await showConfirmDialog({
+            title: 'Logout Confirmation',
+            message: `Are you sure you want to log out of Musiqo, ${nameToShow}?`,
+            confirmText: 'Logout',
+            icon: '🚪',
+            isDanger: true
+          });
+
+          if (confirmed) {
+            window.musiqoDB.logoutUser();
+            showToast('👋 Logged out successfully', 'info');
+            updateAuthUI();
+          }
+        });
+      }
+
+      const manageBtn = $('#openAdminMgmtBtn');
+      if (manageBtn) {
+        manageBtn.addEventListener('click', openAdminUserMgmtModal);
+      }
+    }
+  }
+}
+
+function openAuthModal(initialTab = 'login') {
+  const modal = $('#authModal');
+  if (!modal) return;
+
+  switchAuthTab(initialTab);
+  modal.classList.remove('hidden');
+}
+
+function closeAuthModal() {
+  const user = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+  if (!user) return; // Prevent closing login gate if unauthenticated
+
+  const modal = $('#authModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function showAuthError(msg, targetId = 'authErrorNote') {
+  const note = $(`#${targetId}`);
+  if (!note) return;
+  note.textContent = msg;
+  note.classList.remove('hidden');
+  note.style.animation = 'none';
+  note.offsetHeight; // trigger reflow
+  note.style.animation = 'shakeError 0.35s ease-in-out';
+}
+
+function clearAuthErrors() {
+  const loginNote = $('#authErrorNote');
+  const regNote = $('#registerErrorNote');
+  if (loginNote) loginNote.classList.add('hidden');
+  if (regNote) regNote.classList.add('hidden');
+}
+
+function switchAuthTab(tab) {
+  clearAuthErrors();
+  const tabLogin = $('#authTabLogin');
+  const tabRegister = $('#authTabRegister');
+  const loginForm = $('#loginForm');
+  const registerForm = $('#registerForm');
+  const titleEl = $('#authModalTitle');
+
+  if (tab === 'register') {
+    if (tabLogin) tabLogin.classList.remove('active');
+    if (tabRegister) tabRegister.classList.add('active');
+    if (loginForm) loginForm.classList.add('hidden');
+    if (registerForm) registerForm.classList.remove('hidden');
+    if (titleEl) titleEl.textContent = 'Create Listener Account';
+  } else {
+    if (tabRegister) tabRegister.classList.remove('active');
+    if (tabLogin) tabLogin.classList.add('active');
+    if (registerForm) registerForm.classList.add('hidden');
+    if (loginForm) loginForm.classList.remove('hidden');
+    if (titleEl) titleEl.textContent = 'Welcome to Musiqo';
+  }
+}
+
+function setLoginRole(role) {
+  clearAuthErrors();
+  selectedLoginRole = role;
+  const pillUser = $('#rolePillUser');
+  const pillAdmin = $('#rolePillAdmin');
+  const submitBtn = $('#loginSubmitBtn');
+
+  if (role === 'admin') {
+    if (pillUser) pillUser.classList.remove('active');
+    if (pillAdmin) pillAdmin.classList.add('active');
+    if (submitBtn) submitBtn.textContent = 'Sign In as Admin 👑';
+  } else {
+    if (pillAdmin) pillAdmin.classList.remove('active');
+    if (pillUser) pillUser.classList.add('active');
+    if (submitBtn) submitBtn.textContent = 'Sign In as User 👤';
+  }
+}
+
+function setupAuthSystem() {
+  updateAuthUI();
+
+  // Live input formatting: Force strictly lowercase letters, numbers, and underscores (a-z0-9_)
+  ['#loginUsername', '#registerUsername', '#profileUsername', '#adminEditUsername'].forEach(selector => {
+    const input = $(selector);
+    if (input) {
+      input.addEventListener('input', (e) => {
+        const start = e.target.selectionStart;
+        const oldVal = e.target.value;
+        const newVal = oldVal.toLowerCase().replace(/[^a-z0-9_]/g, '');
+        if (oldVal !== newVal) {
+          e.target.value = newVal;
+          try { e.target.setSelectionRange(start, start); } catch (err) {}
+        }
+      });
+    }
+  });
+
+  if (window.location.search.includes('action=login_admin')) {
+    setLoginRole('admin');
+    openAuthModal('login');
+  }
+
+  const closeBtn = $('#closeAuthModalBtn');
+  const modal = $('#authModal');
+  const tabLogin = $('#authTabLogin');
+  const tabRegister = $('#authTabRegister');
+  const pillUser = $('#rolePillUser');
+  const pillAdmin = $('#rolePillAdmin');
+  const loginForm = $('#loginForm');
+  const registerForm = $('#registerForm');
+
+  if (closeBtn) closeBtn.addEventListener('click', closeAuthModal);
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeAuthModal();
+    });
+  }
+
+  if (tabLogin) tabLogin.addEventListener('click', () => switchAuthTab('login'));
+  if (tabRegister) tabRegister.addEventListener('click', () => switchAuthTab('register'));
+
+  if (pillUser) pillUser.addEventListener('click', () => setLoginRole('user'));
+  if (pillAdmin) pillAdmin.addEventListener('click', () => setLoginRole('admin'));
+
+  // Clear errors on input typing
+  const loginUserIn = $('#loginUsername');
+  const loginPassIn = $('#loginPassword');
+  if (loginUserIn) loginUserIn.addEventListener('input', clearAuthErrors);
+  if (loginPassIn) loginPassIn.addEventListener('input', clearAuthErrors);
+
+  // Login Form Submit
+  if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthErrors();
+      const usernameInput = $('#loginUsername');
+      const passwordInput = $('#loginPassword');
+
+      const username = usernameInput ? usernameInput.value : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      try {
+        const user = await window.musiqoDB.authenticateUser({
+          username,
+          password,
+          requestedRole: selectedLoginRole
+        });
+
+        showToast(`🎉 Logged in as ${user.username} (${user.role.toUpperCase()})`, 'success');
+        closeAuthModal();
+        updateAuthUI();
+
+        if (usernameInput) usernameInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+      } catch (err) {
+        showAuthError(err.message, 'authErrorNote');
+        showToast(err.message, 'error');
+      }
+    });
+  }
+
+  // Register Form Submit (Always creates regular "user" role)
+  if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      clearAuthErrors();
+      const usernameInput = $('#registerUsername');
+      const passwordInput = $('#registerPassword');
+
+      const username = usernameInput ? usernameInput.value : '';
+      const password = passwordInput ? passwordInput.value : '';
+
+      try {
+        const newUser = await window.musiqoDB.registerUser({ username, password });
+        window.musiqoDB.setCurrentUser(newUser);
+
+        showToast(`✨ Account created! Welcome, ${newUser.username}!`, 'success');
+        closeAuthModal();
+        updateAuthUI();
+
+        if (usernameInput) usernameInput.value = '';
+        if (passwordInput) passwordInput.value = '';
+      } catch (err) {
+        showAuthError(err.message, 'registerErrorNote');
+        showToast(err.message, 'error');
+      }
+    });
+  }
+
+  // Admin User Mgmt Close Button
+  const closeAdminBtn = $('#closeAdminMgmtBtn');
+  const adminModal = $('#adminUserMgmtModal');
+  if (closeAdminBtn) closeAdminBtn.addEventListener('click', () => adminModal.classList.add('hidden'));
+  if (adminModal) {
+    adminModal.addEventListener('click', (e) => {
+      if (e.target === adminModal) adminModal.classList.add('hidden');
+    });
+  }
+
+  // Admin Edit User Form submit handler
+  const adminEditForm = $('#adminEditUserForm');
+  const closeAdminEditBtn = $('#closeAdminEditUserBtn');
+  const cancelAdminEditBtn = $('#cancelAdminEditUserBtn');
+  const adminEditModal = $('#adminEditUserModal');
+
+  if (closeAdminEditBtn) closeAdminEditBtn.addEventListener('click', closeAdminEditUserModal);
+  if (cancelAdminEditBtn) cancelAdminEditBtn.addEventListener('click', closeAdminEditUserModal);
+  if (adminEditModal) {
+    adminEditModal.addEventListener('click', (e) => {
+      if (e.target === adminEditModal) closeAdminEditUserModal();
+    });
+  }
+
+  if (adminEditForm) {
+    adminEditForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const origUsername = $('#adminTargetOriginalUsername')?.value;
+      const displayName = $('#adminEditDisplayName')?.value;
+      const username = $('#adminEditUsername')?.value;
+      const newPassword = $('#adminEditNewPassword')?.value;
+
+      try {
+        await window.musiqoDB.adminUpdateUserProfile(origUsername, {
+          displayName,
+          username,
+          newPassword
+        });
+
+        showToast(`🎉 User @${username} profile & password updated by Admin!`, 'success');
+        closeAdminEditUserModal();
+        openAdminUserMgmtModal(); // Refresh user list
+        updateAuthUI();
+      } catch (err) {
+        showAuthError(err.message, 'adminEditUserErrorNote');
+        showToast(err.message, 'error');
+      }
+    });
+  }
+}
+
+// Open Admin User Management Modal
+async function openAdminUserMgmtModal() {
+  const modal = $('#adminUserMgmtModal');
+  const listContainer = $('#adminUsersList');
+  const searchInput = $('#adminUserSearchInput');
+  if (!modal || !listContainer) return;
+
+  const allUsers = await window.musiqoDB.getAllUsers();
+
+  function renderUserList(query = '') {
+    listContainer.innerHTML = '';
+    const activeUser = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+    const isOwner = activeUser && activeUser.role === 'owner';
+    const isAdmin = activeUser && activeUser.role === 'admin';
+
+    const cleanQuery = query.trim().toLowerCase();
+    const filteredUsers = (allUsers || []).filter(u => {
+      if (!cleanQuery) return true;
+      const nameMatch = (u.displayName || '').toLowerCase().includes(cleanQuery);
+      const handleMatch = (u.username || '').toLowerCase().includes(cleanQuery);
+      const roleMatch = (u.role || '').toLowerCase().includes(cleanQuery);
+      return nameMatch || handleMatch || roleMatch;
+    });
+
+    if (!filteredUsers || filteredUsers.length === 0) {
+      listContainer.innerHTML = `<p class="admin-mgmt-subtitle" style="padding: 16px; text-align: center; color: rgba(255,255,255,0.6);">🔍 No registered users match "${escapeHtml(query)}".</p>`;
+      return;
+    }
+
+    filteredUsers.forEach(u => {
+      const row = document.createElement('div');
+      row.className = 'admin-user-row';
+
+      const isTargetOwner = u.role === 'owner';
+      const isTargetAdmin = u.role === 'admin';
+      const isSelf = activeUser && u.username.toLowerCase() === activeUser.username.toLowerCase();
+
+      let roleTag = '<span class="profile-role-tag user">👤 USER</span>';
+      if (isTargetOwner) {
+        roleTag = '<span class="profile-role-tag owner">💎 OWNER</span>';
+      } else if (isTargetAdmin) {
+        roleTag = '<span class="profile-role-tag admin">👑 ADMIN</span>';
+      }
+
+      let actionButtonsHtml = '';
+
+      // Permission Hierarchy Rules:
+      // 1. Target is Owner & not self -> Protected Owner
+      // 2. Target is Admin & active user is Admin (not Owner) -> Protected Admin
+      // 3. Otherwise -> Edit & Promote options available!
+      if (isTargetOwner && !isSelf) {
+        actionButtonsHtml = `<span style="font-size:0.75rem; color:rgba(255,215,0,0.8); font-weight:600;">💎 Owner (Protected)</span>`;
+      } else if (isAdmin && isTargetAdmin && !isSelf) {
+        actionButtonsHtml = `<span style="font-size:0.75rem; color:rgba(255,215,0,0.7); font-weight:600;">👑 Admin (Protected)</span>`;
+      } else {
+        let extraRoleBtns = '';
+        if (isTargetAdmin && isOwner) {
+          extraRoleBtns = `
+            <button class="promote-btn demote-user-btn" data-username="${escapeHtml(u.username)}" style="background: rgba(255, 75, 75, 0.2); color: #ff6b6b; border: 1px solid rgba(255, 75, 75, 0.4);">Demote to User</button>
+            <button class="promote-btn make-admin-btn" data-username="${escapeHtml(u.username)}">Make Owner 💎</button>
+          `;
+        } else if (!isTargetOwner) {
+          extraRoleBtns = `<button class="promote-btn make-admin-btn" data-username="${escapeHtml(u.username)}">Promote to Admin</button>`;
+        }
+
+        let deleteBtnHtml = '';
+        if (isOwner && !isTargetOwner && !isSelf) {
+          deleteBtnHtml = `<button class="promote-btn delete-user-btn" data-username="${escapeHtml(u.username)}" style="background: rgba(220, 38, 38, 0.25); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.4);" title="Delete Account Permanently">🗑️ Delete</button>`;
+        }
+
+        actionButtonsHtml = `
+          <div style="display:flex; gap:8px; align-items:center; flex-shrink:0;">
+            <button class="promote-btn edit-user-btn" data-username="${escapeHtml(u.username)}" style="background: rgba(255,255,255,0.12); color:#fff;">✏️ Edit</button>
+            ${extraRoleBtns}
+            ${deleteBtnHtml}
+          </div>
+        `;
+      }
+
+      row.innerHTML = `
+        <div class="admin-user-info">
+          <span class="admin-user-name">${escapeHtml(u.displayName || u.username)} <small style="opacity:0.6; font-size:0.75rem;">(@${escapeHtml(u.username)})</small></span>
+          ${roleTag}
+        </div>
+        <div>${actionButtonsHtml}</div>
+      `;
+
+      const editBtn = row.querySelector('.edit-user-btn');
+      if (editBtn) {
+        editBtn.addEventListener('click', () => openAdminEditUserModal(u));
+      }
+
+      const deleteUserBtn = row.querySelector('.delete-user-btn');
+      if (deleteUserBtn) {
+        deleteUserBtn.addEventListener('click', async () => {
+          const confirmed = await showConfirmDialog({
+            title: 'Delete Account',
+            message: `Are you sure you want to PERMANENTLY delete user account "@${u.username}" (${u.displayName || u.username})? This action cannot be undone.`,
+            confirmText: 'Delete Account',
+            icon: '🗑️',
+            isDanger: true
+          });
+
+          if (confirmed) {
+            try {
+              await window.musiqoDB.deleteUserAccount(u.username);
+              showToast(`🗑️ Account "@${u.username}" deleted successfully`, 'info');
+              openAdminUserMgmtModal();
+              updateAuthUI();
+            } catch (err) {
+              showToast(err.message, 'error');
+            }
+          }
+        });
+      }
+
+      const demoteBtn = row.querySelector('.demote-user-btn');
+      if (demoteBtn) {
+        demoteBtn.addEventListener('click', async () => {
+          const confirmed = await showConfirmDialog({
+            title: 'Demote Admin',
+            message: `Are you sure you want to demote Admin "@${u.username}" to regular User role?`,
+            confirmText: 'Demote to User',
+            icon: '👤',
+            isDanger: true
+          });
+
+          if (confirmed) {
+            try {
+              await window.musiqoDB.demoteAdminToUser(u.username);
+              showToast(`👤 "@${u.username}" moved to User role!`, 'info');
+              openAdminUserMgmtModal();
+              updateAuthUI();
+            } catch (err) {
+              showToast(err.message, 'error');
+            }
+          }
+        });
+      }
+
+      const makeAdminBtn = row.querySelector('.make-admin-btn');
+      if (makeAdminBtn) {
+        makeAdminBtn.addEventListener('click', async () => {
+          try {
+            if (isOwner && u.role === 'admin') {
+              await window.musiqoDB.promoteUserToOwner(u.username);
+              showToast(`💎 "${u.username}" promoted to Owner!`, 'success');
+            } else {
+              await window.musiqoDB.promoteUserToAdmin(u.username);
+              showToast(`👑 "${u.username}" promoted to Admin!`, 'success');
+            }
+            openAdminUserMgmtModal(); // Refresh list
+            updateAuthUI();
+          } catch (err) {
+            showToast(err.message, 'error');
+          }
+        });
+      }
+
+      listContainer.appendChild(row);
+    });
+  }
+
+  // Wire search input listener
+  if (searchInput && !searchInput.dataset.listening) {
+    searchInput.dataset.listening = 'true';
+    searchInput.addEventListener('input', (e) => {
+      renderUserList(e.target.value);
+    });
+  }
+
+  if (searchInput) searchInput.value = '';
+  renderUserList('');
+  modal.classList.remove('hidden');
+}
+
+// Open Admin Edit User Modal
+function openAdminEditUserModal(targetUser) {
+  const modal = $('#adminEditUserModal');
+  if (!modal || !targetUser) return;
+
+  const titleEl = $('#adminEditUserTitle');
+  const origUserIn = $('#adminTargetOriginalUsername');
+  const nameIn = $('#adminEditDisplayName');
+  const usernameIn = $('#adminEditUsername');
+  const passIn = $('#adminEditNewPassword');
+  const errNote = $('#adminEditUserErrorNote');
+
+  if (errNote) errNote.classList.add('hidden');
+  if (titleEl) titleEl.textContent = `Admin Edit User: @${targetUser.username}`;
+  if (origUserIn) origUserIn.value = targetUser.username;
+  if (nameIn) nameIn.value = targetUser.displayName || '';
+  if (usernameIn) usernameIn.value = targetUser.username;
+  if (passIn) passIn.value = '';
+
+  modal.classList.remove('hidden');
+}
+
+function closeAdminEditUserModal() {
+  const modal = $('#adminEditUserModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+/* ================================================
+   USER PROFILE & ACCOUNT SETTINGS SYSTEM
+   ================================================ */
+
+let currentProfileAvatar = 'assets/logo.jpg';
+
+async function openProfileModal() {
+  const modal = $('#profileModal');
+  const user = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+  if (!modal || !user) return;
+
+  // Clear previous errors
+  const errNote = $('#profileErrorNote');
+  if (errNote) errNote.classList.add('hidden');
+
+  // Fetch latest user data from DB
+  const fullUser = await window.musiqoDB.getUserByUsername(user.username);
+  const activeUser = fullUser || user;
+
+  const displayNameIn = $('#profileDisplayName');
+  const usernameIn = $('#profileUsername');
+  const curPassIn = $('#profileCurrentPassword');
+  const newPassIn = $('#profileNewPassword');
+  const avatarPreview = $('#profileAvatarPreview');
+
+  if (displayNameIn) displayNameIn.value = activeUser.displayName || '';
+  if (usernameIn) usernameIn.value = activeUser.username || '';
+  if (curPassIn) curPassIn.value = '';
+  if (newPassIn) newPassIn.value = '';
+
+  currentProfileAvatar = activeUser.avatar || 'assets/logo.jpg';
+  if (avatarPreview) avatarPreview.src = currentProfileAvatar;
+
+  modal.classList.remove('hidden');
+}
+
+function closeProfileModal() {
+  const modal = $('#profileModal');
+  if (modal) modal.classList.add('hidden');
+}
+
+function setupProfileSystem() {
+  const modal = $('#profileModal');
+  const closeBtn = $('#closeProfileModalBtn');
+  const cancelBtn = $('#cancelProfileBtn');
+  const profileForm = $('#profileForm');
+
+  const uploadAvatarBtn = $('#uploadAvatarBtn');
+  const avatarFileInput = $('#avatarFileInput');
+  const avatarPreview = $('#profileAvatarPreview');
+  const presetBtns = $$('.preset-avatar-btn');
+
+  if (closeBtn) closeBtn.addEventListener('click', closeProfileModal);
+  if (cancelBtn) cancelBtn.addEventListener('click', closeProfileModal);
+  if (modal) {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) closeProfileModal();
+    });
+  }
+
+  // Upload Custom Avatar File
+  if (uploadAvatarBtn && avatarFileInput) {
+    uploadAvatarBtn.addEventListener('click', () => avatarFileInput.click());
+    avatarFileInput.addEventListener('change', (e) => {
+      if (e.target.files && e.target.files[0]) {
+        const file = e.target.files[0];
+        if (!file.type.startsWith('image/')) {
+          showAuthError('Please select a valid image file (PNG, JPG, WEBP).', 'profileErrorNote');
+          return;
+        }
+        const reader = new FileReader();
+        reader.onload = (evt) => {
+          currentProfileAvatar = evt.target.result;
+          if (avatarPreview) avatarPreview.src = currentProfileAvatar;
+          showToast('📸 Custom Profile Picture loaded!', 'info');
+        };
+        reader.readAsDataURL(file);
+      }
+    });
+  }
+
+  // Preset Avatar Buttons
+  const presetAvatarsMap = {
+    cyber: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=150&auto=format&fit=crop&q=80',
+    neon: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=150&auto=format&fit=crop&q=80',
+    star: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&auto=format&fit=crop&q=80',
+    fire: 'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=150&auto=format&fit=crop&q=80',
+    crown: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=150&auto=format&fit=crop&q=80',
+    dj: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?w=150&auto=format&fit=crop&q=80'
+  };
+
+  presetBtns.forEach(btn => {
+    btn.addEventListener('click', () => {
+      const presetKey = btn.dataset.preset;
+      if (presetAvatarsMap[presetKey]) {
+        currentProfileAvatar = presetAvatarsMap[presetKey];
+        if (avatarPreview) avatarPreview.src = currentProfileAvatar;
+        showToast('✨ Preset avatar selected!', 'info');
+      }
+    });
+  });
+
+  // Profile Form Submit Handler
+  if (profileForm) {
+    profileForm.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const user = window.musiqoDB ? window.musiqoDB.getCurrentUser() : null;
+      if (!user) return;
+
+      const displayNameIn = $('#profileDisplayName');
+      const usernameIn = $('#profileUsername');
+      const curPassIn = $('#profileCurrentPassword');
+      const newPassIn = $('#profileNewPassword');
+
+      const displayName = displayNameIn ? displayNameIn.value : '';
+      const newUsername = usernameIn ? usernameIn.value : '';
+      const currentPassword = curPassIn ? curPassIn.value : '';
+      const newPassword = newPassIn ? newPassIn.value : '';
+
+      try {
+        const updatedUser = await window.musiqoDB.updateUserProfile(user.username, {
+          displayName,
+          username: newUsername,
+          currentPassword,
+          newPassword,
+          avatar: currentProfileAvatar
+        });
+
+        showToast('🎉 Profile & Account Settings updated successfully!', 'success');
+        closeProfileModal();
+        updateAuthUI();
+      } catch (err) {
+        showAuthError(err.message, 'profileErrorNote');
+        showToast(err.message, 'error');
+      }
+    });
+  }
 }
 
